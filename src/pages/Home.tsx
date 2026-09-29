@@ -52,8 +52,12 @@ function Home() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
-              <Wifi size={25} strokeWidth={2.5} />
+            <div className="flex h-11 w-11 items-center justify-center">
+              <img
+                src="/new-logo.png"
+                alt="BayanNet"
+                className="h-10 w-10 object-contain"
+              />
             </div>
 
             <div>
@@ -620,8 +624,12 @@ function Home() {
                 className="flex items-center gap-3"
               >
 
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
-                  <Wifi size={24} />
+                <div className="flex h-11 w-11 items-center justify-center">
+                  <img
+                    src="/new-logo.png"
+                    alt="BayanNet"
+                    className="h-10 w-10 object-contain"
+                  />
                 </div>
 
                 <div>

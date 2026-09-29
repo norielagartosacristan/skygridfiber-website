@@ -5,6 +5,9 @@ import Apply from "./pages/Apply";
 
 import SubscriberLogin from "./pages/subscriber/SubscriberLogin";
 import SubscriberDashboard from "./pages/subscriber/Dashboard";
+import ForgotPassword from "./pages/subscriber/ForgotPassword";
+import ResetPassword from "./pages/subscriber/ResetPassword";
+import ChangePassword from "./pages/subscriber/ChangePassword";
 
 import SubscriberLayout from "./components/subscriber/SubscriberLayout";
 
@@ -34,6 +37,20 @@ function App() {
           path="/subscriber/login"
           element={<SubscriberLogin />}
         />
+        <Route
+  path="/subscriber/forgot-password"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/subscriber/reset-password"
+  element={<ResetPassword />}
+/>
+
+<Route
+  path="/subscriber/change-password"
+  element={<ChangePassword />}
+/>
 
         {/* Subscriber Portal */}
         <Route
