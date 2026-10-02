@@ -7,6 +7,7 @@ import SubscriberLogin from "./pages/subscriber/SubscriberLogin";
 import SubscriberDashboard from "./pages/subscriber/Dashboard";
 import Account from "./pages/subscriber/Account";
 import Plan from "./pages/subscriber/Plan";
+import Bills from "./pages/subscriber/Bills";
 import ForgotPassword from "./pages/subscriber/ForgotPassword";
 import ResetPassword from "./pages/subscriber/ResetPassword";
 import ChangePassword from "./pages/subscriber/ChangePassword";
@@ -97,7 +98,7 @@ function App() {
           path="/subscriber/bills"
           element={
             <SubscriberPage>
-              <ComingSoon title="Bills" />
+              <Bills />
             </SubscriberPage>
           }
         />
