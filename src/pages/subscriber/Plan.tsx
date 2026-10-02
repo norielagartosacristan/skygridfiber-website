@@ -32,7 +32,7 @@ type Service = {
 
 type Subscriber = {
   accountNumber: string;
-  services?: Service[];
+  service?: Service | null;
 };
 
 type MeResponse = {
@@ -114,10 +114,10 @@ export default function Plan() {
         setSubscriber(data.subscriber);
 
         setService(
-          data.service ??
-            data.subscriber.services?.[0] ??
-            null,
-        );
+            data.subscriber.service ??
+                data.service ??
+                null,
+            );
       } catch (err) {
         setError(
           err instanceof Error
