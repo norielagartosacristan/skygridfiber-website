@@ -12,12 +12,25 @@ import {
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 type SubscriberLayoutProps = {
   children: ReactNode;
 };
+
+type Subscriber = {
+  firstName: string;
+  middleName?: string | null;
+  lastName: string;
+};
+
+type MeResponse = {
+  success: boolean;
+  subscriber: Subscriber;
+};
+
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 const navigation = [
   {
@@ -69,6 +82,55 @@ export default function SubscriberLayout({
 
     navigate("/subscriber/login");
   };
+
+  const [subscriber, setSubscriber] =
+  useState<Subscriber | null>(null);
+
+useEffect(() => {
+  async function loadSubscriber() {
+    try {
+      const response = await fetch(
+        `${API_URL}/api/subscriber-auth/me`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        return;
+      }
+
+      const data: MeResponse =
+        await response.json();
+
+      if (data.success) {
+        setSubscriber(data.subscriber);
+      }
+    } catch (error) {
+      console.error(
+        "Failed to load subscriber profile:",
+        error,
+      );
+    }
+  }
+
+  loadSubscriber();
+}, []);
+
+const fullName = subscriber
+  ? [
+      subscriber.firstName,
+      subscriber.middleName,
+      subscriber.lastName,
+    ]
+      .filter(Boolean)
+      .join(" ")
+  : "Subscriber";
+
+const initials = subscriber
+  ? `${subscriber.firstName?.charAt(0) || ""}${subscriber.lastName?.charAt(0) || ""}`.toUpperCase()
+  : "S";
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -212,21 +274,21 @@ export default function SubscriberLayout({
 
             <div className="flex items-center gap-3">
 
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-black text-blue-600">
-                JD
-              </div>
-
-              <div className="hidden sm:block">
-                <div className="text-sm font-bold text-slate-900">
-                  Juan Dela Cruz
-                </div>
-
-                <div className="text-xs text-slate-500">
-                  Subscriber
-                </div>
-              </div>
-
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-black text-blue-600">
+              {initials}
             </div>
+
+            <div className="hidden sm:block">
+              <div className="text-sm font-bold text-slate-900">
+                {fullName}
+              </div>
+
+              <div className="text-xs text-slate-500">
+                Subscriber
+              </div>
+            </div>
+
+          </div>
 
           </div>
 
