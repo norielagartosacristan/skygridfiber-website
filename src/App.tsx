@@ -5,6 +5,7 @@ import Apply from "./pages/Apply";
 
 import SubscriberLogin from "./pages/subscriber/SubscriberLogin";
 import SubscriberDashboard from "./pages/subscriber/Dashboard";
+import Account from "./pages/subscriber/Account";
 import ForgotPassword from "./pages/subscriber/ForgotPassword";
 import ResetPassword from "./pages/subscriber/ResetPassword";
 import ChangePassword from "./pages/subscriber/ChangePassword";
@@ -73,11 +74,11 @@ function App() {
         />
 
         {/* Temporary placeholders */}
-        <Route
+       <Route
           path="/subscriber/account"
           element={
             <SubscriberPage>
-              <ComingSoon title="My Account" />
+              <Account />
             </SubscriberPage>
           }
         />
