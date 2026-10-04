@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import {
   ArrowLeft,
@@ -11,36 +11,32 @@ import {
 } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 
-const plans = {
-  prepaid: {
-    name: "Prepaid",
-    price: "₱700",
-    speed: "Up to 35 Mbps",
-  },
-  "50mbps": {
-    name: "BayanNet 50",
-    price: "₱999",
-    speed: "Up to 50 Mbps",
-  },
-  "100mbps": {
-    name: "BayanNet 100",
-    price: "₱1,299",
-    speed: "Up to 100 Mbps",
-  },
+type Plan = {
+  id: string;
+  planCode: string;
+  planName: string;
+  downloadMbps: number;
+  uploadMbps: number;
+  monthlyPrice: string;
+  billingType: "POSTPAID" | "PREPAID" | "FREE";
+  validityDays: number | null;
 };
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 export default function Apply() {
-const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-const planParam = searchParams.get("plan");
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plansLoading, setPlansLoading] = useState(true);
+  const [plansError, setPlansError] = useState("");
 
-const initialPlan =
-  planParam && planParam in plans
-    ? planParam
-    : "50mbps";
+  const [selectedPlanId, setSelectedPlanId] = useState("");
 
-  const [selectedPlan, setSelectedPlan] = useState(initialPlan);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [applicationNumber, setApplicationNumber] = useState("");
 
   const [form, setForm] = useState({
     firstName: "",
@@ -59,6 +55,82 @@ const initialPlan =
     agree: false,
   });
 
+  useEffect(() => {
+    async function fetchPlans() {
+      try {
+        setPlansLoading(true);
+        setPlansError("");
+
+        const response = await fetch(`${API_URL}/api/plans`);
+
+        const result: {
+          success: boolean;
+          data: Plan[];
+        } = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error("Unable to load internet plans.");
+        }
+
+        setPlans(result.data);
+
+        /*
+         * Preserve the existing ?plan= links from the website.
+         *
+         * Examples:
+         * /apply?plan=prepaid
+         * /apply?plan=50mbps
+         * /apply?plan=100mbps
+         */
+        const planParam = searchParams.get("plan");
+
+        let matchedPlan: Plan | undefined;
+
+        if (planParam === "50mbps") {
+          matchedPlan = result.data.find(
+            (plan) =>
+              plan.downloadMbps === 50 &&
+              Number(plan.monthlyPrice) === 999 &&
+              plan.billingType === "POSTPAID",
+          );
+        }
+
+        if (planParam === "100mbps") {
+          matchedPlan = result.data.find(
+            (plan) =>
+              plan.downloadMbps === 100 &&
+              Number(plan.monthlyPrice) === 1299 &&
+              plan.billingType === "POSTPAID",
+          );
+        }
+
+        if (planParam === "prepaid") {
+          matchedPlan = result.data.find(
+            (plan) =>
+              plan.billingType === "PREPAID" &&
+              plan.downloadMbps === 35,
+          );
+        }
+
+        setSelectedPlanId(
+          matchedPlan?.id ?? result.data[0]?.id ?? "",
+        );
+      } catch (error) {
+        console.error("Error fetching plans:", error);
+
+        setPlansError(
+          error instanceof Error
+            ? error.message
+            : "Unable to load internet plans.",
+        );
+      } finally {
+        setPlansLoading(false);
+      }
+    }
+
+    fetchPlans();
+  }, [searchParams]);
+
   const updateField = (
     field: keyof typeof form,
     value: string | boolean | File | null,
@@ -69,26 +141,106 @@ const initialPlan =
     }));
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const selectedPlan = plans.find(
+    (plan) => plan.id === selectedPlanId,
+  );
+
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
-    /*
-     * Temporary behavior.
-     *
-     * Later we will replace this with:
-     *
-     * POST /api/applications
-     *
-     * so the application will be saved
-     * directly to the BayanNet database.
-     */
+    if (!selectedPlanId) {
+      setSubmitError("Please select an internet plan.");
+      return;
+    }
 
-    setSubmitted(true);
+    if (!form.validId) {
+      setSubmitError("Please upload a valid ID.");
+      return;
+    }
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    try {
+      setSubmitting(true);
+      setSubmitError("");
+
+      const installationAddress = [
+        form.address,
+        form.barangay,
+        form.municipality,
+        form.province,
+        form.postalCode,
+      ]
+        .filter((value) => value.trim())
+        .join(", ");
+
+      const formData = new FormData();
+
+      formData.append("firstName", form.firstName.trim());
+      formData.append("middleName", form.middleName.trim());
+      formData.append("lastName", form.lastName.trim());
+      formData.append("email", form.email.trim());
+      formData.append("mobileNumber", form.mobile.trim());
+      formData.append("birthDate", form.birthDate);
+      formData.append(
+        "installationAddress",
+        installationAddress,
+      );
+      formData.append(
+        "installationNotes",
+        form.installationNotes.trim(),
+      );
+      formData.append("planId", selectedPlanId);
+      formData.append("validId", form.validId);
+
+      const response = await fetch(
+        `${API_URL}/api/applications`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+      const result: {
+        success: boolean;
+        message: string;
+        data?: {
+          applicationNumber: string;
+          status: string;
+          plan: {
+            planCode: string;
+            planName: string;
+          };
+        };
+      } = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Failed to submit application.",
+        );
+      }
+
+      setApplicationNumber(
+        result.data?.applicationNumber ?? "",
+      );
+
+      setSubmitted(true);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } catch (error) {
+      console.error("Error submitting application:", error);
+
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Failed to submit application. Please try again.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -119,15 +271,33 @@ const initialPlan =
               </div>
 
               <div className="mt-1 text-lg font-bold text-slate-900">
-                {plans[selectedPlan as keyof typeof plans].name}
+                {selectedPlan?.planName ?? "Selected Plan"}
               </div>
 
               <div className="mt-1 text-sm text-blue-600">
-                {plans[selectedPlan as keyof typeof plans].speed}
-                {" · "}
-                {plans[selectedPlan as keyof typeof plans].price}
+                            {selectedPlan
+              ? `Up to ${selectedPlan.downloadMbps} Mbps · ₱${Number(
+                  selectedPlan.monthlyPrice,
+                ).toLocaleString("en-PH")}`
+              : ""}
               </div>
             </div>
+
+            {applicationNumber && (
+                <div className="mt-4 rounded-2xl border border-blue-100 bg-blue-50 p-5 text-left">
+                  <div className="text-sm font-semibold text-blue-700">
+                    Application Number
+                  </div>
+
+                  <div className="mt-1 text-xl font-black tracking-wide text-blue-900">
+                    {applicationNumber}
+                  </div>
+
+                  <p className="mt-2 text-xs leading-5 text-blue-700">
+                    Please keep this application number for your records.
+                  </p>
+                </div>
+              )}
 
             <Link
               to="/"
@@ -220,39 +390,53 @@ const initialPlan =
             </div>
 
             <div className="mt-7 grid gap-4 md:grid-cols-3">
-              {Object.entries(plans).map(([key, plan]) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setSelectedPlan(key)}
-                  className={`rounded-2xl border p-5 text-left transition ${
-                    selectedPlan === key
-                      ? "border-blue-600 bg-blue-50 ring-2 ring-blue-600/10"
-                      : "border-slate-200 hover:border-blue-300"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-500">
-                      {plan.name}
-                    </span>
-
-                    {selectedPlan === key && (
-                      <CheckCircle2
-                        size={20}
-                        className="text-blue-600"
-                      />
-                    )}
+              {plansLoading ? (
+                  <div className="rounded-2xl border border-slate-200 p-6 text-center text-sm text-slate-500 md:col-span-3">
+                    Loading available plans...
                   </div>
-
-                  <div className="mt-3 text-2xl font-black text-slate-900">
-                    {plan.price}
+                ) : plansError ? (
+                  <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-sm text-red-700 md:col-span-3">
+                    {plansError}
                   </div>
+                ) : (
+                  plans.map((plan) => (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      onClick={() => setSelectedPlanId(plan.id)}
+                      className={`rounded-2xl border p-5 text-left transition ${
+                        selectedPlanId === plan.id
+                          ? "border-blue-600 bg-blue-50 ring-2 ring-blue-600/10"
+                          : "border-slate-200 hover:border-blue-300"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-slate-500">
+                          {plan.planName}
+                        </span>
 
-                  <div className="mt-1 text-sm font-semibold text-blue-600">
-                    {plan.speed}
-                  </div>
-                </button>
-              ))}
+                        {selectedPlanId === plan.id && (
+                          <CheckCircle2
+                            size={20}
+                            className="text-blue-600"
+                          />
+                        )}
+                      </div>
+
+                      <div className="mt-3 text-2xl font-black text-slate-900">
+                        ₱{Number(plan.monthlyPrice).toLocaleString("en-PH")}
+                      </div>
+
+                      <div className="mt-1 text-sm font-semibold text-blue-600">
+                        Up to {plan.downloadMbps} Mbps
+                      </div>
+
+                      <div className="mt-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                        {plan.billingType}
+                      </div>
+                    </button>
+                  ))
+                )}
             </div>
           </section>
 
@@ -492,6 +676,12 @@ const initialPlan =
             </label>
           </section>
 
+          {submitError && (
+            <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">
+              {submitError}
+            </div>
+          )}
+
           {/* Submit */}
           <div className="mt-8 flex flex-col items-center justify-between gap-5 sm:flex-row">
             <div className="flex items-center gap-3 text-sm text-slate-500">
@@ -499,13 +689,15 @@ const initialPlan =
               Our team may contact you to verify your application.
             </div>
 
-            <button
-              type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 sm:w-auto"
-            >
-              Submit Application
-              <CheckCircle2 size={19} />
-            </button>
+           <button
+            type="submit"
+            disabled={submitting || plansLoading}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 px-8 py-4 font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+          >
+            {submitting ? "Submitting Application..." : "Submit Application"}
+
+            {!submitting && <CheckCircle2 size={19} />}
+          </button>
           </div>
         </form>
       </main>
