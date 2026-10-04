@@ -187,6 +187,15 @@ function Home() {
                 Support
               </a>
 
+                {/* Subscriber Login */}
+      <Link
+        to="/subscriber/login"
+        onClick={() => setMenuOpen(false)}
+        className="inline-flex items-center justify-center rounded-xl border border-blue-600 px-5 py-3 font-bold text-blue-600 transition hover:bg-blue-50"
+      >
+        Subscriber Login
+      </Link>
+
               <Link
                 to="/apply"
                 onClick={() => setMenuOpen(false)}
