@@ -72,7 +72,11 @@ export default function Apply() {
           throw new Error("Unable to load internet plans.");
         }
 
-        setPlans(result.data);
+        const publicPlans = result.data.filter(
+          (plan) => plan.billingType !== "FREE",
+        );
+
+        setPlans(publicPlans);
 
         /*
          * Preserve the existing ?plan= links from the website.
