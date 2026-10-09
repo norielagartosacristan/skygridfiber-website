@@ -428,75 +428,81 @@ useEffect(() => {
           <ChevronLeft size={22} />
         </button>
 
-        <div className="w-full max-w-md">
-          {(() => {
-            const plan = plans[currentPlanIndex];
+        <div className="min-w-0 flex-1">
+          
+<div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+  {plans
+    .slice(currentPlanIndex, currentPlanIndex + 3)
+    .concat(
+      plans.slice(
+        0,
+        Math.max(0, currentPlanIndex + 3 - plans.length),
+      ),
+    )
+    .map((plan) => (
+      <div
+        key={plan.id}
+        className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-8"
+      >
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+              {plan.planName}
+            </p>
 
-            if (!plan) return null;
+            <div className="mt-4 flex flex-wrap items-end gap-2">
+              <span className="text-3xl font-black text-slate-900">
+                {new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
+                  maximumFractionDigits: 2,
+                }).format(Number(plan.monthlyPrice))}
+              </span>
 
-            return (
-              <div
-                key={plan.id}
-                className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-lg transition sm:p-8"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                      {plan.planName}
-                    </p>
+              <span className="mb-1 text-sm text-slate-500">
+                {plan.billingType === "PREPAID"
+                  ? `/ ${plan.validityDays ?? 30} days`
+                  : "/ month"}
+              </span>
+            </div>
+          </div>
 
-                    <div className="mt-4 flex flex-wrap items-end gap-2">
-                      <span className="text-3xl font-black text-slate-900 sm:text-4xl">
-                        {new Intl.NumberFormat("en-PH", {
-                          style: "currency",
-                          currency: "PHP",
-                          maximumFractionDigits: 2,
-                        }).format(Number(plan.monthlyPrice))}
-                      </span>
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+            <Router size={24} />
+          </div>
+        </div>
 
-                      <span className="mb-1 text-sm text-slate-500">
-                        {plan.billingType === "PREPAID"
-                          ? `/ ${plan.validityDays ?? 30} days`
-                          : "/ month"}
-                      </span>
-                    </div>
-                  </div>
+        <div className="mt-7 rounded-2xl bg-slate-950 p-5">
+          <div className="text-2xl font-black text-white sm:text-3xl">
+            Up to {plan.downloadMbps} Mbps
+          </div>
 
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <Router size={24} />
-                  </div>
-                </div>
+          <div className="mt-2 text-sm text-slate-400">
+            Download speed
+          </div>
 
-                <div className="mt-7 rounded-2xl bg-slate-950 p-5">
-                  <div className="text-3xl font-black text-white">
-                    Up to {plan.downloadMbps} Mbps
-                  </div>
+          <div className="mt-3 text-sm text-slate-300">
+            Upload: up to {plan.uploadMbps} Mbps
+          </div>
+        </div>
 
-                  <div className="mt-2 text-sm text-slate-400">
-                    Download speed
-                  </div>
+        <p className="mt-6 text-sm leading-6 text-slate-600">
+          {plan.billingType === "PREPAID"
+            ? "Prepaid internet plan with a defined validity period."
+            : "Monthly internet service for your home or business."}
+        </p>
 
-                  <div className="mt-3 text-sm text-slate-300">
-                    Upload: up to {plan.uploadMbps} Mbps
-                  </div>
-                </div>
+        <Link
+          to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
+          className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
+        >
+          Get Started
+          <ArrowRight size={17} />
+        </Link>
+      </div>
+    ))}
+</div>
 
-                <p className="mt-6 text-sm leading-6 text-slate-600">
-                  {plan.billingType === "PREPAID"
-                    ? "Prepaid internet plan with a defined validity period."
-                    : "Monthly internet service for your home or business."}
-                </p>
-
-                <Link
-                  to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
-                  className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
-                >
-                  Get Started
-                  <ArrowRight size={17} />
-                </Link>
-              </div>
-            );
-          })()}
         </div>
 
         <button
