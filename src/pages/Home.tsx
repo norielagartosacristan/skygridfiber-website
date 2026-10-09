@@ -163,34 +163,43 @@ useEffect(() => {
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
 
          
-          {/* Logo and Company Branding */}
-          <Link to="/" className="flex items-center gap-3">
-            {branding.logoUrl && (
-              <img
-                src={
-                  branding.logoUrl.startsWith("http")
-                    ? branding.logoUrl
-                    : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
-                }
-                alt={`${branding.tradeName || branding.companyName} logo`}
-                className="h-10 w-10 shrink-0 object-contain"
-              />
-            )}
+          
+{/* Logo and Company Branding */}
+<Link to="/" className="flex items-center gap-3">
+  <img
+    src={
+      branding.logoUrl
+        ? branding.logoUrl.startsWith("http")
+          ? branding.logoUrl
+          : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
+        : "/new-logo.png"
+    }
+    alt={`${branding.tradeName || branding.companyName} logo`}
+    className="h-10 w-10 shrink-0 object-contain"
+    onError={(event) => {
+      const img = event.currentTarget;
 
-            <div>
-              <div className="text-xl font-extrabold tracking-tight text-slate-900">
-                {branding.tradeName || branding.companyName}
-              </div>
+      if (!img.src.endsWith("/new-logo.png")) {
+        img.onerror = null;
+        img.src = "/new-logo.png";
+      }
+    }}
+  />
 
-              {branding.tradeName &&
-                branding.companyName &&
-                branding.tradeName !== branding.companyName && (
-                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                    {branding.companyName}
-                  </div>
-                )}
-            </div>
-          </Link>
+  <div>
+    <div className="text-xl font-extrabold tracking-tight text-slate-900">
+      {branding.tradeName || branding.companyName}
+    </div>
+
+    {branding.tradeName &&
+      branding.companyName &&
+      branding.tradeName !== branding.companyName && (
+        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+          {branding.companyName}
+        </div>
+      )}
+  </div>
+</Link>
 
 
           {/* Desktop Navigation */}
