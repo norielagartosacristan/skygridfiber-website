@@ -3,8 +3,7 @@ import type { FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Mail, Send, ShieldCheck } from "lucide-react";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 type CompanyBranding = {
   companyName: string;
