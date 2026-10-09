@@ -10,38 +10,73 @@ import {
   Wifi,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const plans = [
-  {
-    id: "prepaid",
-    name: "Prepaid",
-    price: "₱700",
-    speed: "Up to 35 Mbps",
-    description: "Flexible internet for everyday connectivity.",
-    popular: false,
-  },
-  {
-    id: "50mbps",
-    name: "BayanNet 50",
-    price: "₱999",
-    speed: "Up to 50 Mbps",
-    description: "Great for families, streaming, and online work.",
-    popular: true,
-  },
-  {
-    id: "100mbps",
-    name: "BayanNet 100",
-    price: "₱1,299",
-    speed: "Up to 100 Mbps",
-    description: "More speed for connected homes and businesses.",
-    popular: false,
-  },
-];
+type Plan = {
+  id: string | number;
+  planCode: string;
+  planName: string;
+  downloadMbps: number;
+  uploadMbps: number;
+  monthlyPrice: number | string;
+  billingType: string;
+  validityDays?: number | null;
+  isActive: boolean;
+};
 
 function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+const [menuOpen, setMenuOpen] = useState(false);
+const [plans, setPlans] = useState<Plan[]>([]);
+const [plansLoading, setPlansLoading] = useState(true);
+const [plansError, setPlansError] = useState("");
+
+useEffect(() => {
+  const controller = new AbortController();
+
+  async function loadPlans() {
+    try {
+      const apiBase = (
+        import.meta.env.VITE_API_URL || ""
+      ).replace(/\/$/, "");
+
+      const response = await fetch(
+        `${apiBase}/api/plans`,
+        { signal: controller.signal }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to load internet plans.");
+      }
+
+      const result = await response.json();
+
+      const items = Array.isArray(result)
+        ? result
+        : result.data ?? result.plans ?? [];
+
+      setPlans(
+        items.filter((plan: Plan) => plan.isActive !== false)
+      );
+    } catch (error) {
+      if (controller.signal.aborted) return;
+
+      setPlansError(
+        error instanceof Error
+          ? error.message
+          : "Unable to load internet plans."
+      );
+    } finally {
+      if (!controller.signal.aborted) {
+        setPlansLoading(false);
+      }
+    }
+  }
+
+  void loadPlans();
+
+  return () => controller.abort();
+}, []);
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -342,84 +377,86 @@ function Home() {
 
           </div>
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-3">
+         
+          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {plansLoading ? (
+              <p className="col-span-full py-10 text-center text-slate-500">
+                Loading internet plans...
+              </p>
+            ) : plansError ? (
+              <p className="col-span-full py-10 text-center text-red-600">
+                {plansError}
+              </p>
+            ) : plans.length === 0 ? (
+              <p className="col-span-full py-10 text-center text-slate-500">
+                No internet plans are currently available.
+              </p>
+            ) : (
+              plans.map((plan) => (
+                <div
+                  key={plan.id}
+                  className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+                        {plan.planName}
+                      </p>
 
-            {plans.map((plan) => (
-              <div
-                key={plan.id}
-                className={`relative rounded-3xl border bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl ${
-                  plan.popular
-                    ? "border-blue-500 ring-2 ring-blue-500/10"
-                    : "border-slate-200"
-                }`}
-              >
+                      <div className="mt-4 flex items-end gap-2">
+                        <span className="text-4xl font-black text-slate-900">
+                          {new Intl.NumberFormat("en-PH", {
+                            style: "currency",
+                            currency: "PHP",
+                            maximumFractionDigits: 2,
+                          }).format(Number(plan.monthlyPrice))}
+                        </span>
 
-                {/* Popular */}
-                {plan.popular && (
-                  <div className="absolute -top-3 left-8 rounded-full bg-blue-600 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white">
-                    Popular
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between">
-
-                  <div>
-
-                    <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                      {plan.name}
-                    </p>
-
-                    <div className="mt-4 flex items-end gap-2">
-
-                      <span className="text-4xl font-black text-slate-900">
-                        {plan.price}
-                      </span>
-
-                      <span className="mb-1 text-sm text-slate-500">
-                        / month
-                      </span>
-
+                        <span className="mb-1 text-sm text-slate-500">
+                          {plan.billingType === "PREPAID"
+                            ? ` / ${plan.validityDays ?? 30} days`
+                            : "/ month"}
+                        </span>
+                      </div>
                     </div>
 
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <Router size={24} />
+                    </div>
                   </div>
 
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                    <Router size={24} />
+                  <div className="mt-7 rounded-2xl bg-slate-950 p-5">
+                    <div className="text-3xl font-black text-white">
+                      Up to {plan.downloadMbps} Mbps
+                    </div>
+
+                    <div className="mt-2 text-sm text-slate-400">
+                      Download speed
+                    </div>
+
+                    <div className="mt-3 text-sm text-slate-300">
+                      Upload: up to {plan.uploadMbps} Mbps
+                    </div>
                   </div>
 
+                  <p className="mt-6 text-sm leading-6 text-slate-600">
+                    {plan.billingType === "PREPAID"
+                      ? "Prepaid internet plan with a defined validity period."
+                      : "Monthly internet service for your home or business."}
+                  </p>
+
+                  <Link
+                    to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
+                    className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
+                  >
+                    Get Started
+                    <ArrowRight size={17} />
+                  </Link>
                 </div>
-
-                <div className="mt-7 rounded-2xl bg-slate-950 p-5">
-
-                  <div className="text-3xl font-black text-white">
-                    {plan.speed}
-                  </div>
-
-                  <div className="mt-1 text-sm text-slate-400">
-                    High-speed internet
-                  </div>
-
-                </div>
-
-                <p className="mt-6 text-sm leading-6 text-slate-600">
-                  {plan.description}
-                </p>
-
-                {/* IMPORTANT:
-                    Selected plan is passed to Application page
-                */}
-                <Link
-                  to={`/apply?plan=${plan.id}`}
-                  className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
-                >
-                  Get Started
-                  <ArrowRight size={17} />
-                </Link>
-
-              </div>
-            ))}
-
+              ))
+            )}
           </div>
+
         </div>
       </section>
 
