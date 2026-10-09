@@ -841,7 +841,7 @@ useEffect(() => {
                   </div>
 
                   <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                    {branding.tradeName || branding.companyName}
+                    {branding.companyName}
                   </div>
 
                 </div>
@@ -913,7 +913,7 @@ useEffect(() => {
           </div>
 
           <div className="mt-12 border-t border-slate-200 pt-6 text-sm text-slate-500">
-            © {new Date().getFullYear()} {branding.tradeName || branding.companyName}.
+            © {new Date().getFullYear()} {branding.companyName}.
             All rights reserved.
           </div>
 
