@@ -30,6 +30,18 @@ type MeResponse = {
   subscriber: Subscriber;
 };
 
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+ const [branding, setBranding] = useState<CompanyBranding>({
+    companyName: "My Internet Service Provider",
+    tradeName: "MyCompany",
+    logoUrl: null,
+  });
+
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 const navigation = [
@@ -69,6 +81,32 @@ const navigation = [
     icon: Settings,
   },
 ];
+
+ useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
 
 export default function SubscriberLayout({
   children,
@@ -165,7 +203,7 @@ const initials = subscriber
 
             <div>
               <div className="text-lg font-black text-slate-900">
-                Bayan<span className="text-blue-600">Net</span>
+                {branding.tradeName || branding.companyName}
               </div>
 
               <div className="text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -255,7 +293,7 @@ const initials = subscriber
             </p>
 
             <p className="text-xs text-slate-500">
-              Manage your BayanNet account
+              Manage your {branding.tradeName || branding.companyName} account
             </p>
           </div>
 
