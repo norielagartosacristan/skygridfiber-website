@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -14,6 +14,46 @@ import {
 const API_URL =
   import.meta.env.VITE_API_URL ||
   'http://localhost:5000'
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
+
+useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+  
+        if (!response.ok) return;
+  
+        const result = await response.json();
+  
+        if (result.success && result.data) {
+          setBranding({
+            companyName: result.data.companyName || "",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  
+    void loadBranding();
+  }, []);
+  
 
 export default function SubscriberLogin() {
   const navigate = useNavigate()
@@ -125,11 +165,11 @@ export default function SubscriberLogin() {
 
               <div>
                 <div className="text-xl font-black tracking-tight text-white">
-                  BayanNet
+                  {branding.tradeName || branding.companyName}
                 </div>
 
                 <div className="text-xs font-medium text-slate-400">
-                  Telecom Corporation
+                  {branding.tradeName ? "Subscriber Portal" : "My Internet Service Provider"}
                 </div>
               </div>
             </Link>
@@ -143,7 +183,7 @@ export default function SubscriberLogin() {
               <h1 className="text-4xl font-black tracking-tight text-white xl:text-6xl">
                 Manage your
                 <span className="block text-blue-500">
-                  BayanNet account.
+                  {branding.tradeName || branding.companyName} account.
                 </span>
               </h1>
 
@@ -155,8 +195,8 @@ export default function SubscriberLogin() {
             </div>
 
             <div className="text-sm text-slate-500">
-              © {new Date().getFullYear()} BayanNet
-              Telecom Corporation
+              © {new Date().getFullYear()} {branding.tradeName || branding.companyName}
+              {branding.tradeName}. All rights reserved.
             </div>
           </div>
         </div>
@@ -176,11 +216,11 @@ export default function SubscriberLogin() {
 
                 <div>
                   <div className="text-xl font-black tracking-tight text-slate-900">
-                    BayanNet
+                    {branding.tradeName || branding.companyName}
                   </div>
 
                   <div className="text-xs font-medium text-slate-500">
-                    Telecom Corporation
+                    {branding.tradeName ? "Subscriber Portal" : "My Internet Service Provider"}
                   </div>
                 </div>
               </Link>
@@ -197,7 +237,7 @@ export default function SubscriberLogin() {
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Sign in using your BayanNet account
+                  Sign in using your {branding.tradeName || branding.companyName} account
                   number and password.
                 </p>
               </div>
@@ -332,7 +372,7 @@ export default function SubscriberLogin() {
 
               <div className="mt-8 border-t border-slate-100 pt-6 text-center">
                 <p className="text-sm text-slate-500">
-                  Don't have a BayanNet account?
+                  Don't have a {branding.tradeName || branding.companyName} account?
                 </p>
 
                 <Link
@@ -350,7 +390,7 @@ export default function SubscriberLogin() {
                 to="/"
                 className="text-sm font-medium text-slate-500 transition hover:text-slate-800"
               >
-                ← Back to BayanNet website
+                ← Back to {branding.tradeName || branding.companyName} website
               </Link>
             </div>
           </div>

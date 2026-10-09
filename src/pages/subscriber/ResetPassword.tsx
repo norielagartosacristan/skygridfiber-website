@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
@@ -12,6 +12,46 @@ import {
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
+
+useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+  
+        if (!response.ok) return;
+  
+        const result = await response.json();
+  
+        if (result.success && result.data) {
+          setBranding({
+            companyName: result.data.companyName || "",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  
+    void loadBranding();
+  }, []);
+  
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -109,10 +149,10 @@ export default function ResetPassword() {
 
               <div>
                 <div className="text-xl font-black text-white">
-                  BayanNet
+                  {branding.tradeName || branding.companyName}
                 </div>
                 <div className="text-xs font-medium text-slate-400">
-                  Telecom Corporation
+                  {branding.tradeName ? "Subscriber Portal" : "My Internet Service Provider"}
                 </div>
               </div>
             </Link>

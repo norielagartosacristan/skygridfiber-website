@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -16,6 +17,18 @@ const API_URL =
 type LocationState = {
   firstLogin?: boolean;
 };
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
 
 export default function ChangePassword() {
   const navigate = useNavigate();
@@ -119,6 +132,33 @@ export default function ChangePassword() {
     });
   }
 
+
+useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -139,11 +179,11 @@ export default function ChangePassword() {
 
               <div>
                 <div className="text-xl font-black text-white">
-                  BayanNet
+                  {branding.tradeName || branding.companyName}
                 </div>
 
                 <div className="text-xs font-medium text-slate-400">
-                  Telecom Corporation
+                  Subscriber Portal
                 </div>
               </div>
             </Link>
@@ -159,12 +199,12 @@ export default function ChangePassword() {
 
               <p className="mt-6 text-lg leading-8 text-slate-400">
                 For your security, please create a new password before
-                continuing to your BayanNet subscriber dashboard.
+                continuing to your {branding.tradeName || branding.companyName} subscriber dashboard.
               </p>
             </div>
 
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} BayanNet Telecom Corporation.
+              © {new Date().getFullYear()} {branding.companyName}.
               All rights reserved.
             </p>
           </div>
@@ -185,7 +225,7 @@ export default function ChangePassword() {
 
                 <div>
                   <div className="font-black text-slate-900">
-                    BayanNet
+                    {branding.tradeName || branding.companyName}
                   </div>
 
                   <div className="text-xs text-slate-500">

@@ -52,6 +52,12 @@ type MeResponse = {
   service?: Service | null;
 };
 
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
 type StatCardProps = {
   title: string;
   value: string;
@@ -59,6 +65,12 @@ type StatCardProps = {
   icon: ElementType;
   iconClassName: string;
 };
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
 
 function StatCard({
   title,
@@ -137,6 +149,31 @@ function getStatusLabel(status?: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
 
 export default function SubscriberDashboard() {
   const [subscriber, setSubscriber] =
@@ -599,7 +636,7 @@ export default function SubscriberDashboard() {
               }`}
             >
               {serviceStatus === "ACTIVE"
-                ? "Your BayanNet internet service is currently active."
+                ? `Your ${branding.companyName} internet service is currently active.`
                 : "Please check your account or contact BayanNet support for assistance."}
             </p>
           </div>

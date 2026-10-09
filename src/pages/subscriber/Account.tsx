@@ -26,12 +26,56 @@ type MeResponse = {
   subscriber: Subscriber;
 };
 
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+
 export default function Account() {
   const [subscriber, setSubscriber] =
     useState<Subscriber | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "My Internet Service Provider",
+  tradeName: "MyCompany",
+  logoUrl: null,
+});
+
+
+  useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+
+        if (!response.ok) return;
+
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setBranding({
+            companyName:
+              result.data.companyName ||
+              "BayanNet Telecom Corporation",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to load company branding:", err);
+      }
+    }
+
+    void loadBranding();
+  }, []);
+
 
   useEffect(() => {
     async function loadAccount() {
@@ -76,6 +120,36 @@ export default function Account() {
 
     loadAccount();
   }, []);
+
+  
+useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName:
+            result.data.companyName ||
+            "BayanNet Telecom Corporation",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load company branding:", err);
+    }
+  }
+
+  void loadBranding();
+}, []);
+
 
   if (loading) {
     return (
@@ -131,7 +205,7 @@ export default function Account() {
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Manage and view your BayanNet subscriber information.
+          Manage and view your {branding.companyName} subscriber information.
         </p>
       </div>
 

@@ -41,6 +41,46 @@ type MeResponse = {
   service?: Service | null;
 };
 
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
+
+useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+  
+        if (!response.ok) return;
+  
+        const result = await response.json();
+  
+        if (result.success && result.data) {
+          setBranding({
+            companyName: result.data.companyName || "",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  
+    void loadBranding();
+  }, []);
+  
+
 function formatCurrency(value: string | number | undefined) {
   const amount = Number(value ?? 0);
 
@@ -189,7 +229,7 @@ export default function Plan() {
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          View your current BayanNet internet plan and service details.
+          View your current {branding.tradeName || branding.companyName} internet plan and service details.
         </p>
       </div>
 

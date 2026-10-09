@@ -38,6 +38,14 @@ type BillsResponse = {
   message?: string;
 };
 
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-PH", {
     style: "currency",
@@ -110,6 +118,14 @@ export default function Bills() {
   const [error, setError] = useState("");
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
 
+  
+  const [branding, setBranding] = useState<CompanyBranding>({
+    companyName: "My Internet Service Provider",
+    tradeName: "MyCompany",
+    logoUrl: null,
+  });
+
+
   useEffect(() => {
     async function loadBills() {
       try {
@@ -164,6 +180,32 @@ export default function Bills() {
     (bill) =>
       Number(bill.balance || 0) > 0,
   ).length;
+
+  useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
 
   return (
     <div className="space-y-6">
@@ -397,11 +439,11 @@ export default function Bills() {
         <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-6 sm:flex-row sm:items-start">
           <div>
             <div className="text-2xl font-bold tracking-tight text-slate-900">
-              BAYANNET
+              {branding.tradeName || branding.companyName}
             </div>
 
             <p className="mt-1 text-sm text-slate-500">
-              Internet Service Provider
+              {branding.companyName}
             </p>
 
             <p className="mt-3 text-xs text-slate-500">
@@ -555,7 +597,7 @@ export default function Bills() {
         {/* Footer */}
         <div className="mt-10 border-t border-slate-200 pt-6 text-center">
           <p className="text-sm font-medium text-slate-700">
-            Thank you for choosing BayanNet.
+            Thank you for choosing {branding.companyName}.
           </p>
 
           <p className="mt-1 text-xs text-slate-500">

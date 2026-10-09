@@ -1,10 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle2, Mail, Send, ShieldCheck } from "lucide-react";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -63,6 +75,33 @@ export default function ForgotPassword() {
     }
   }
 
+  useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+  
+        if (!response.ok) return;
+  
+        const result = await response.json();
+  
+        if (result.success && result.data) {
+          setBranding({
+            companyName: result.data.companyName || "",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  
+    void loadBranding();
+  }, []);
+  
+
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="flex min-h-screen flex-col lg:flex-row">
@@ -83,10 +122,10 @@ export default function ForgotPassword() {
 
                 <div>
                   <div className="text-xl font-black tracking-tight text-white">
-                    BayanNet
+                    {branding.tradeName || branding.companyName}
                   </div>
                   <div className="text-xs font-medium text-slate-400">
-                    Telecom Corporation
+                    {branding.tradeName ? "Subscriber Portal" : "Telecom Corporation"}
                   </div>
                 </div>
               </Link>
@@ -102,14 +141,12 @@ export default function ForgotPassword() {
               </h1>
 
               <p className="mt-6 max-w-lg text-lg leading-8 text-slate-400">
-                Enter the email address registered to your BayanNet
-                subscriber account and we'll send you instructions to
-                create a new password.
+                Enter the email address registered to your {branding.tradeName || branding.companyName} subscriber account and we'll send you instructions to create a new password.
               </p>
             </div>
 
             <p className="text-sm text-slate-500">
-              © {new Date().getFullYear()} BayanNet Telecom Corporation.
+              © {new Date().getFullYear()} {branding.tradeName || branding.companyName} Telecom Corporation.
               All rights reserved.
             </p>
           </div>
@@ -129,10 +166,10 @@ export default function ForgotPassword() {
 
                 <div>
                   <div className="font-black text-slate-900">
-                    BayanNet
+                    {branding.tradeName || branding.companyName}
                   </div>
                   <div className="text-xs text-slate-500">
-                    Subscriber Portal
+                    {branding.tradeName ? "Subscriber Portal" : "My Internet Service Provider"}
                   </div>
                 </div>
               </Link>
