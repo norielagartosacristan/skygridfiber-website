@@ -102,6 +102,59 @@ useEffect(() => {
   setCurrentPlanIndex(0);
 }, [plans.length]);
 
+
+
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
+const API_URL = import.meta.env.VITE_API_URL || "";
+
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "BayanNet Telecom Corporation",
+  tradeName: "BayanNet",
+  logoUrl: null,
+});
+
+useEffect(() => {
+  const controller = new AbortController();
+
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        { signal: controller.signal },
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to load company branding.");
+      }
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName:
+            result.data.companyName || "BayanNet Telecom Corporation",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  }
+
+  void loadBranding();
+
+  return () => controller.abort();
+}, []);
+
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
 
@@ -119,15 +172,35 @@ useEffect(() => {
               />
             </div>
 
+            
+<div className="flex items-center gap-3">
+  {branding.logoUrl && (
+    <img
+      src={
+        branding.logoUrl.startsWith("http")
+          ? branding.logoUrl
+          : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
+      }
+      alt={`${branding.tradeName || branding.companyName} logo`}
+      className="h-10 w-10 shrink-0 object-contain"
+    />
+  )}
+
             <div>
               <div className="text-xl font-extrabold tracking-tight text-slate-900">
-                Bayan<span className="text-blue-600">Net</span>
+                {branding.tradeName || branding.companyName}
               </div>
 
-              <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                Telecom Corporation
-              </div>
+              {branding.tradeName &&
+                branding.companyName &&
+                branding.tradeName !== branding.companyName && (
+                  <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                    {branding.companyName}
+                  </div>
+                )}
             </div>
+          </div>
+
           </Link>
 
           {/* Desktop Navigation */}
