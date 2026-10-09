@@ -12,17 +12,19 @@ type CompanyBranding = {
   logoUrl: string | null;
 };
 
-const [branding, setBranding] = useState<CompanyBranding>({
-  companyName: "",
-  tradeName: null,
-  logoUrl: null,
-});
+
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

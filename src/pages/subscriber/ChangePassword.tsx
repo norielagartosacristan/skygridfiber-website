@@ -24,11 +24,6 @@ type CompanyBranding = {
   logoUrl: string | null;
 };
 
-const [branding, setBranding] = useState<CompanyBranding>({
-  companyName: "",
-  tradeName: null,
-  logoUrl: null,
-});
 
 export default function ChangePassword() {
   const navigate = useNavigate();
@@ -52,6 +47,13 @@ export default function ChangePassword() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+
+  
+const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

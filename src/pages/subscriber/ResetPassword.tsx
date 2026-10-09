@@ -20,7 +20,23 @@ type CompanyBranding = {
 };
 
 
-const [branding, setBranding] = useState<CompanyBranding>({
+export default function ResetPassword() {
+  const [searchParams] = useSearchParams();
+
+  const token = searchParams.get("token") || "";
+
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const [branding, setBranding] = useState<CompanyBranding>({
   companyName: "",
   tradeName: null,
   logoUrl: null,
@@ -52,22 +68,6 @@ useEffect(() => {
     void loadBranding();
   }, []);
   
-
-export default function ResetPassword() {
-  const [searchParams] = useSearchParams();
-
-  const token = searchParams.get("token") || "";
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
-
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();

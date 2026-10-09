@@ -22,7 +22,25 @@ type CompanyBranding = {
 };
 
 
-const [branding, setBranding] = useState<CompanyBranding>({
+export default function SubscriberLogin() {
+  const navigate = useNavigate()
+
+  const [accountNumber, setAccountNumber] =
+    useState('')
+
+  const [password, setPassword] =
+    useState('')
+
+  const [showPassword, setShowPassword] =
+    useState(false)
+
+  const [loading, setLoading] =
+    useState(false)
+
+  const [error, setError] =
+    useState('')
+
+  const [branding, setBranding] = useState<CompanyBranding>({
   companyName: "",
   tradeName: null,
   logoUrl: null,
@@ -54,24 +72,6 @@ useEffect(() => {
     void loadBranding();
   }, []);
   
-
-export default function SubscriberLogin() {
-  const navigate = useNavigate()
-
-  const [accountNumber, setAccountNumber] =
-    useState('')
-
-  const [password, setPassword] =
-    useState('')
-
-  const [showPassword, setShowPassword] =
-    useState(false)
-
-  const [loading, setLoading] =
-    useState(false)
-
-  const [error, setError] =
-    useState('')
 
   async function handleSubmit(
     event: FormEvent<HTMLFormElement>,

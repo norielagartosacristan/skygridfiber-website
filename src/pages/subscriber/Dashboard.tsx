@@ -66,12 +66,6 @@ type StatCardProps = {
   iconClassName: string;
 };
 
-const [branding, setBranding] = useState<CompanyBranding>({
-  companyName: "",
-  tradeName: null,
-  logoUrl: null,
-});
-
 function StatCard({
   title,
   value,
@@ -149,32 +143,6 @@ function getStatusLabel(status?: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-useEffect(() => {
-  async function loadBranding() {
-    try {
-      const response = await fetch(
-        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
-      );
-
-      if (!response.ok) return;
-
-      const result = await response.json();
-
-      if (result.success && result.data) {
-        setBranding({
-          companyName: result.data.companyName || "",
-          tradeName: result.data.tradeName || null,
-          logoUrl: result.data.logoUrl || null,
-        });
-      }
-    } catch (error) {
-      console.error("Failed to load company branding:", error);
-    }
-  }
-
-  void loadBranding();
-}, []);
-
 export default function SubscriberDashboard() {
   const [subscriber, setSubscriber] =
     useState<Subscriber | null>(null);
@@ -183,6 +151,7 @@ export default function SubscriberDashboard() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
 
   useEffect(() => {
     async function loadDashboard() {
@@ -230,6 +199,38 @@ export default function SubscriberDashboard() {
 
     loadDashboard();
   }, []);
+
+  const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
+
+useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
 
   if (loading) {
     return (
