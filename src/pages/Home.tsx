@@ -364,7 +364,7 @@ useEffect(() => {
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
               Stay connected with reliable high-speed internet from
-              BayanNet Telecom Corporation. Built for homes, families,
+              {branding.companyName}. Built for homes, families,
               businesses, and communities.
             </p>
 
@@ -626,7 +626,7 @@ useEffect(() => {
             <div>
 
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-                Why BayanNet
+                Why {branding.companyName}
               </p>
 
               <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
@@ -634,7 +634,7 @@ useEffect(() => {
               </h2>
 
               <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                BayanNet Telecom Corporation is committed to bringing
+                {branding.companyName} is committed to bringing
                 reliable, accessible, and affordable internet connectivity
                 to the communities we serve.
               </p>
@@ -643,7 +643,7 @@ useEffect(() => {
                 to="/apply"
                 className="mt-8 inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-700"
               >
-                Become a BayanNet subscriber
+                Become a {branding.companyName} subscriber
                 <ArrowRight size={18} />
               </Link>
 
@@ -735,7 +735,7 @@ useEffect(() => {
                   <Wifi size={19} />
                 </div>
 
-                Check if BayanNet is available in your area.
+                Check if {branding.companyName} is available in your area.
 
               </div>
 
@@ -793,7 +793,7 @@ useEffect(() => {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-blue-100">
-            Choose your BayanNet plan and start enjoying reliable
+            Choose your {branding.companyName} plan and start enjoying reliable
             internet connectivity.
           </p>
 
@@ -827,7 +827,7 @@ useEffect(() => {
                 <div className="flex h-11 w-11 items-center justify-center">
                   <img
                     src="/new-logo.png"
-                    alt="BayanNet"
+                    alt={branding.companyName}
                     className="h-10 w-10 object-contain"
                   />
                 </div>
@@ -835,11 +835,11 @@ useEffect(() => {
                 <div>
 
                   <div className="text-xl font-extrabold">
-                    Bayan<span className="text-blue-600">Net</span>
+                    {branding.tradeName || branding.companyName}
                   </div>
 
                   <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                    Telecom Corporation
+                    {branding.companyName}
                   </div>
 
                 </div>
@@ -911,7 +911,7 @@ useEffect(() => {
           </div>
 
           <div className="mt-12 border-t border-slate-200 pt-6 text-sm text-slate-500">
-            © {new Date().getFullYear()} BayanNet Telecom Corporation.
+            © {new Date().getFullYear()} {branding.companyName}.
             All rights reserved.
           </div>
 
