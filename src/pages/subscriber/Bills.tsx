@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import {
   CalendarDays,
-  ChevronRight,
   CircleDollarSign,
   FileText,
   Loader2,
+  Printer,
   Receipt,
+  X,
 } from "lucide-react";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
@@ -107,6 +108,7 @@ export default function Bills() {
   const [bills, setBills] = useState<Bill[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
 
   useEffect(() => {
     async function loadBills() {
@@ -347,21 +349,227 @@ export default function Bills() {
 
                   {/* Action */}
                   <div className="shrink-0">
-                    <button
-                      type="button"
-                      disabled
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-400 sm:w-auto"
-                      title="PDF feature coming next"
-                    >
-                      View Bill
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
+                   <button
+                    type="button"
+                    onClick={() => setSelectedBill(bill)}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-800 sm:w-auto"
+                  >
+                    View Bill
+                    <FileText className="h-4 w-4" />
+                  </button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+        {selectedBill && (
+  <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/70 p-4 sm:p-6">
+    <div className="mx-auto w-full max-w-3xl">
+      {/* Modal Actions */}
+      <div className="mb-3 flex justify-end gap-2 print:hidden">
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-slate-800"
+        >
+          <Printer className="h-4 w-4" />
+          Print Bill
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setSelectedBill(null)}
+          className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          <X className="h-4 w-4" />
+          Close
+        </button>
+      </div>
+
+      {/* Billing Statement */}
+      <div
+        id="billing-statement"
+        className="rounded-2xl bg-white p-8 shadow-xl sm:p-10"
+      >
+        {/* Header */}
+        <div className="flex flex-col justify-between gap-6 border-b border-slate-200 pb-6 sm:flex-row sm:items-start">
+          <div>
+            <div className="text-2xl font-bold tracking-tight text-slate-900">
+              BAYANNET
+            </div>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Internet Service Provider
+            </p>
+
+            <p className="mt-3 text-xs text-slate-500">
+              Billing Statement
+            </p>
+          </div>
+
+          <div className="text-left sm:text-right">
+            <p className="text-xs font-medium uppercase tracking-wider text-slate-500">
+              Invoice Number
+            </p>
+
+            <p className="mt-1 text-lg font-bold text-slate-900">
+              {selectedBill.invoiceNumber}
+            </p>
+
+            <span
+              className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold ring-1 ${getStatusStyle(
+                selectedBill.status,
+              )}`}
+            >
+              {getStatusLabel(selectedBill.status)}
+            </span>
+          </div>
+        </div>
+
+        {/* Billing Information */}
+        <div className="grid gap-6 border-b border-slate-200 py-6 sm:grid-cols-2">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Billing Period
+            </p>
+
+            <p className="mt-1 font-semibold text-slate-900">
+              {formatBillingPeriod(
+                selectedBill.billingYear,
+                selectedBill.billingMonth,
+              )}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Billing Date
+            </p>
+
+            <p className="mt-1 font-semibold text-slate-900">
+              {formatDate(selectedBill.billingDate)}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Due Date
+            </p>
+
+            <p className="mt-1 font-semibold text-slate-900">
+              {formatDate(selectedBill.dueDate)}
+            </p>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              Service Status
+            </p>
+
+            <p className="mt-1 font-semibold text-slate-900">
+              {selectedBill.service?.serviceStatus || "—"}
+            </p>
+          </div>
+        </div>
+
+        {/* Service Details */}
+        <div className="py-6">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">
+            Service Details
+          </h3>
+
+          <div className="mt-4 overflow-hidden rounded-xl border border-slate-200">
+            <div className="grid grid-cols-1 divide-y divide-slate-200 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+              <div className="p-4">
+                <p className="text-xs text-slate-500">
+                  Internet Plan
+                </p>
+
+                <p className="mt-1 font-semibold text-slate-900">
+                  {selectedBill.planName}
+                </p>
+              </div>
+
+              <div className="p-4">
+                <p className="text-xs text-slate-500">
+                  Download Speed
+                </p>
+
+                <p className="mt-1 font-semibold text-slate-900">
+                  Up to {selectedBill.downloadMbps} Mbps
+                </p>
+              </div>
+
+              <div className="p-4">
+                <p className="text-xs text-slate-500">
+                  Upload Speed
+                </p>
+
+                <p className="mt-1 font-semibold text-slate-900">
+                  Up to {selectedBill.uploadMbps} Mbps
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Amount Summary */}
+        <div className="border-t border-slate-200 pt-6">
+          <div className="ml-auto max-w-sm space-y-3">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-slate-500">
+                Billing Amount
+              </span>
+
+              <span className="font-medium text-slate-900">
+                {formatCurrency(selectedBill.amount)}
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-slate-500">
+                Paid Amount
+              </span>
+
+              <span className="font-medium text-emerald-600">
+                {formatCurrency(selectedBill.paidAmount)}
+              </span>
+            </div>
+
+            <div className="border-t border-slate-200 pt-3">
+              <div className="flex items-center justify-between">
+                <span className="font-semibold text-slate-900">
+                  Remaining Balance
+                </span>
+
+                <span className="text-xl font-bold text-slate-900">
+                  {formatCurrency(selectedBill.balance)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-10 border-t border-slate-200 pt-6 text-center">
+          <p className="text-sm font-medium text-slate-700">
+            Thank you for choosing BayanNet.
+          </p>
+
+          <p className="mt-1 text-xs text-slate-500">
+            Please settle your balance on or before the due date.
+          </p>
+
+          <p className="mt-4 text-[11px] text-slate-400">
+            This is a computer-generated billing statement.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

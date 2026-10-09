@@ -9,3 +9,38 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+@media print {
+  body {
+    background: white !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #billing-statement,
+  #billing-statement * {
+    visibility: visible;
+  }
+
+  #billing-statement {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 32px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .print\:hidden {
+    display: none !important;
+  }
+
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+}
