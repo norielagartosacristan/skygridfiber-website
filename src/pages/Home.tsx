@@ -428,7 +428,7 @@ useEffect(() => {
           <ChevronLeft size={22} />
         </button>
 
-        <div className="min-w-0 flex-1">
+       
           
 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
   {plans
@@ -503,7 +503,7 @@ useEffect(() => {
     ))}
 </div>
 
-        </div>
+    
 
         <button
           type="button"
