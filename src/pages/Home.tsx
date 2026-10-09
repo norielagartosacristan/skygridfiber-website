@@ -55,9 +55,15 @@ useEffect(() => {
         ? result
         : result.data ?? result.plans ?? [];
 
-      setPlans(
-        items.filter((plan: Plan) => plan.isActive !== false)
-      );
+     
+    setPlans(
+      items.filter(
+        (plan: Plan) =>
+          plan.isActive !== false &&
+          plan.billingType !== "FREE",
+      ),
+    );
+
     } catch (error) {
       if (controller.signal.aborted) return;
 
