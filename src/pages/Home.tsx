@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useCompanyPageTitle } from "../hooks/useCompanyPageTitle";
 
 type Plan = {
   id: string | number;
@@ -117,6 +118,7 @@ const [branding, setBranding] = useState<CompanyBranding>({
   tradeName: "BayanNet",
   logoUrl: null,
 });
+useCompanyPageTitle(branding);
 
 useEffect(() => {
   const controller = new AbortController();
