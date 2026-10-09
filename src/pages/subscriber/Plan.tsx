@@ -48,39 +48,6 @@ type CompanyBranding = {
 };
 
 
-const [branding, setBranding] = useState<CompanyBranding>({
-  companyName: "",
-  tradeName: null,
-  logoUrl: null,
-});
-
-useEffect(() => {
-    async function loadBranding() {
-      try {
-        const response = await fetch(
-          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
-        );
-  
-        if (!response.ok) return;
-  
-        const result = await response.json();
-  
-        if (result.success && result.data) {
-          setBranding({
-            companyName: result.data.companyName || "",
-            tradeName: result.data.tradeName || null,
-            logoUrl: result.data.logoUrl || null,
-          });
-        }
-      } catch (error) {
-        console.error("Failed to load company branding:", error);
-      }
-    }
-  
-    void loadBranding();
-  }, []);
-  
-
 function formatCurrency(value: string | number | undefined) {
   const amount = Number(value ?? 0);
 
@@ -121,6 +88,39 @@ export default function Plan() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [branding, setBranding] = useState<CompanyBranding>({
+  companyName: "",
+  tradeName: null,
+  logoUrl: null,
+});
+
+useEffect(() => {
+    async function loadBranding() {
+      try {
+        const response = await fetch(
+          `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+        );
+  
+        if (!response.ok) return;
+  
+        const result = await response.json();
+  
+        if (result.success && result.data) {
+          setBranding({
+            companyName: result.data.companyName || "",
+            tradeName: result.data.tradeName || null,
+            logoUrl: result.data.logoUrl || null,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load company branding:", error);
+      }
+    }
+  
+    void loadBranding();
+  }, []);
+  
 
   useEffect(() => {
     async function loadPlan() {
