@@ -1,7 +1,8 @@
 import {
+  ChevronLeft,
+  ChevronRight,
   ArrowRight,
   Check,
-  ChevronRight,
   Clock3,
   Headphones,
   Menu,
@@ -30,6 +31,19 @@ const [menuOpen, setMenuOpen] = useState(false);
 const [plans, setPlans] = useState<Plan[]>([]);
 const [plansLoading, setPlansLoading] = useState(true);
 const [plansError, setPlansError] = useState("");
+const [currentPlanIndex, setCurrentPlanIndex] = useState(0);
+
+const nextPlan = () => {
+  setCurrentPlanIndex((index) =>
+    plans.length ? (index + 1) % plans.length : 0
+  );
+};
+
+const prevPlan = () => {
+  setCurrentPlanIndex((index) =>
+    plans.length ? (index - 1 + plans.length) % plans.length : 0
+  );
+};
 
 useEffect(() => {
   const controller = new AbortController();
@@ -83,6 +97,10 @@ useEffect(() => {
 
   return () => controller.abort();
 }, []);
+
+useEffect(() => {
+  setCurrentPlanIndex(0);
+}, [plans.length]);
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
@@ -384,84 +402,136 @@ useEffect(() => {
           </div>
 
          
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {plansLoading ? (
-              <p className="col-span-full py-10 text-center text-slate-500">
-                Loading internet plans...
-              </p>
-            ) : plansError ? (
-              <p className="col-span-full py-10 text-center text-red-600">
-                {plansError}
-              </p>
-            ) : plans.length === 0 ? (
-              <p className="col-span-full py-10 text-center text-slate-500">
-                No internet plans are currently available.
-              </p>
-            ) : (
-              plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="relative rounded-3xl border border-slate-200 bg-white p-8 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
-                        {plan.planName}
-                      </p>
+          
+<div className="mt-14">
+  {plansLoading ? (
+    <p className="py-10 text-center text-slate-500">
+      Loading internet plans...
+    </p>
+  ) : plansError ? (
+    <p className="py-10 text-center text-red-600">
+      {plansError}
+    </p>
+  ) : plans.length === 0 ? (
+    <p className="py-10 text-center text-slate-500">
+      No internet plans are currently available.
+    </p>
+  ) : (
+    <>
+      <div className="mx-auto flex max-w-5xl items-center justify-center gap-3 sm:gap-6">
+        <button
+          type="button"
+          onClick={prevPlan}
+          aria-label="Previous internet plan"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-blue-50 sm:h-12 sm:w-12"
+        >
+          <ChevronLeft size={22} />
+        </button>
 
-                      <div className="mt-4 flex items-end gap-2">
-                        <span className="text-4xl font-black text-slate-900">
-                          {new Intl.NumberFormat("en-PH", {
-                            style: "currency",
-                            currency: "PHP",
-                            maximumFractionDigits: 2,
-                          }).format(Number(plan.monthlyPrice))}
-                        </span>
+        <div className="w-full max-w-md">
+          {(() => {
+            const plan = plans[currentPlanIndex];
 
-                        <span className="mb-1 text-sm text-slate-500">
-                          {plan.billingType === "PREPAID"
-                            ? ` / ${plan.validityDays ?? 30} days`
-                            : "/ month"}
-                        </span>
-                      </div>
-                    </div>
+            if (!plan) return null;
 
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <Router size={24} />
+            return (
+              <div
+                key={plan.id}
+                className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-lg transition sm:p-8"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
+                      {plan.planName}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap items-end gap-2">
+                      <span className="text-3xl font-black text-slate-900 sm:text-4xl">
+                        {new Intl.NumberFormat("en-PH", {
+                          style: "currency",
+                          currency: "PHP",
+                          maximumFractionDigits: 2,
+                        }).format(Number(plan.monthlyPrice))}
+                      </span>
+
+                      <span className="mb-1 text-sm text-slate-500">
+                        {plan.billingType === "PREPAID"
+                          ? `/ ${plan.validityDays ?? 30} days`
+                          : "/ month"}
+                      </span>
                     </div>
                   </div>
 
-                  <div className="mt-7 rounded-2xl bg-slate-950 p-5">
-                    <div className="text-3xl font-black text-white">
-                      Up to {plan.downloadMbps} Mbps
-                    </div>
-
-                    <div className="mt-2 text-sm text-slate-400">
-                      Download speed
-                    </div>
-
-                    <div className="mt-3 text-sm text-slate-300">
-                      Upload: up to {plan.uploadMbps} Mbps
-                    </div>
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <Router size={24} />
                   </div>
-
-                  <p className="mt-6 text-sm leading-6 text-slate-600">
-                    {plan.billingType === "PREPAID"
-                      ? "Prepaid internet plan with a defined validity period."
-                      : "Monthly internet service for your home or business."}
-                  </p>
-
-                  <Link
-                    to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
-                    className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
-                  >
-                    Get Started
-                    <ArrowRight size={17} />
-                  </Link>
                 </div>
-              ))
-            )}
-          </div>
+
+                <div className="mt-7 rounded-2xl bg-slate-950 p-5">
+                  <div className="text-3xl font-black text-white">
+                    Up to {plan.downloadMbps} Mbps
+                  </div>
+
+                  <div className="mt-2 text-sm text-slate-400">
+                    Download speed
+                  </div>
+
+                  <div className="mt-3 text-sm text-slate-300">
+                    Upload: up to {plan.uploadMbps} Mbps
+                  </div>
+                </div>
+
+                <p className="mt-6 text-sm leading-6 text-slate-600">
+                  {plan.billingType === "PREPAID"
+                    ? "Prepaid internet plan with a defined validity period."
+                    : "Monthly internet service for your home or business."}
+                </p>
+
+                <Link
+                  to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
+                  className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
+                >
+                  Get Started
+                  <ArrowRight size={17} />
+                </Link>
+              </div>
+            );
+          })()}
+        </div>
+
+        <button
+          type="button"
+          onClick={nextPlan}
+          aria-label="Next internet plan"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-blue-50 sm:h-12 sm:w-12"
+        >
+          <ChevronRight size={22} />
+        </button>
+      </div>
+
+      <div className="mt-6 flex justify-center gap-2">
+        {plans.map((plan, index) => (
+          <button
+            key={plan.id}
+            type="button"
+            onClick={() => setCurrentPlanIndex(index)}
+            aria-label={`Show ${plan.planName}`}
+            aria-current={index === currentPlanIndex ? "true" : undefined}
+            className={`h-2.5 rounded-full transition-all ${
+              index === currentPlanIndex
+                ? "w-8 bg-blue-600"
+                : "w-2.5 bg-slate-300 hover:bg-slate-400"
+            }`}
+          />
+        ))}
+      </div>
+
+      <p className="mt-3 text-center text-sm text-slate-500">
+        Plan {currentPlanIndex + 1} of {plans.length}
+      </p>
+    </>
+  )}
+</div>
 
         </div>
       </section>
