@@ -36,11 +36,7 @@ type CompanyBranding = {
   logoUrl: string | null;
 };
 
- const [branding, setBranding] = useState<CompanyBranding>({
-    companyName: "My Internet Service Provider",
-    tradeName: "MyCompany",
-    logoUrl: null,
-  });
+
 
 const API_URL = import.meta.env.VITE_API_URL || "";
 
@@ -82,31 +78,6 @@ const navigation = [
   },
 ];
 
- useEffect(() => {
-  async function loadBranding() {
-    try {
-      const response = await fetch(
-        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
-      );
-
-      if (!response.ok) return;
-
-      const result = await response.json();
-
-      if (result.success && result.data) {
-        setBranding({
-          companyName: result.data.companyName || "",
-          tradeName: result.data.tradeName || null,
-          logoUrl: result.data.logoUrl || null,
-        });
-      }
-    } catch (error) {
-      console.error("Failed to load company branding:", error);
-    }
-  }
-
-  void loadBranding();
-}, []);
 
 export default function SubscriberLayout({
   children,
@@ -169,6 +140,38 @@ const fullName = subscriber
 const initials = subscriber
   ? `${subscriber.firstName?.charAt(0) || ""}${subscriber.lastName?.charAt(0) || ""}`.toUpperCase()
   : "S";
+
+   const [branding, setBranding] = useState<CompanyBranding>({
+    companyName: "My Internet Service Provider",
+    tradeName: "MyCompany",
+    logoUrl: null,
+  });
+
+  useEffect(() => {
+  async function loadBranding() {
+    try {
+      const response = await fetch(
+        `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+      );
+
+      if (!response.ok) return;
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        setBranding({
+          companyName: result.data.companyName || "",
+          tradeName: result.data.tradeName || null,
+          logoUrl: result.data.logoUrl || null,
+        });
+      }
+    } catch (error) {
+      console.error("Failed to load company branding:", error);
+    }
+  }
+
+  void loadBranding();
+}, []);
 
   return (
     <div className="min-h-screen bg-slate-50">
