@@ -365,8 +365,8 @@ useEffect(() => {
             </h1>
 
             <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-              Stay connected with reliable high-speed internet from
-              {branding.companyName}. Built for homes, families,
+              Stay connected with reliable high-speed internet from 
+              {branding.tradeName || branding.companyName}. Built for homes, families,
               businesses, and communities.
             </p>
 
@@ -645,7 +645,7 @@ useEffect(() => {
                 to="/apply"
                 className="mt-8 inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-700"
               >
-                Become a {branding.companyName} subscriber
+                Become a {branding.tradeName || branding.companyName} subscriber
                 <ArrowRight size={18} />
               </Link>
 
@@ -737,7 +737,7 @@ useEffect(() => {
                   <Wifi size={19} />
                 </div>
 
-                Check if {branding.companyName} is available in your area.
+                Check if {branding.tradeName || branding.companyName} is available in your area.
 
               </div>
 
@@ -795,7 +795,7 @@ useEffect(() => {
           </h2>
 
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-blue-100">
-            Choose your {branding.companyName} plan and start enjoying reliable
+            Choose your {branding.tradeName || branding.companyName} plan and start enjoying reliable
             internet connectivity.
           </p>
 
@@ -841,7 +841,7 @@ useEffect(() => {
                   </div>
 
                   <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                    {branding.companyName}
+                    {branding.tradeName || branding.companyName}
                   </div>
 
                 </div>
@@ -913,7 +913,7 @@ useEffect(() => {
           </div>
 
           <div className="mt-12 border-t border-slate-200 pt-6 text-sm text-slate-500">
-            © {new Date().getFullYear()} {branding.companyName}.
+            © {new Date().getFullYear()} {branding.tradeName || branding.companyName}.
             All rights reserved.
           </div>
 
