@@ -22,6 +22,12 @@ type Plan = {
   validityDays: number | null;
 };
 
+type CompanyBranding = {
+  companyName: string;
+  tradeName: string | null;
+  logoUrl: string | null;
+};
+
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 export default function Apply() {
@@ -54,6 +60,38 @@ export default function Apply() {
     validId: null as File | null,
     agree: false,
   });
+
+  const [branding, setBranding] = useState<CompanyBranding>({
+    companyName: "",
+    tradeName: null,
+    logoUrl: null,
+  });
+  
+  useEffect(() => {
+      async function loadBranding() {
+        try {
+          const response = await fetch(
+            `${API_URL.replace(/\/$/, "")}/api/company/branding`,
+          );
+    
+          if (!response.ok) return;
+    
+          const result = await response.json();
+    
+          if (result.success && result.data) {
+            setBranding({
+              companyName: result.data.companyName || "",
+              tradeName: result.data.tradeName || null,
+              logoUrl: result.data.logoUrl || null,
+            });
+          }
+        } catch (error) {
+          console.error("Failed to load company branding:", error);
+        }
+      }
+    
+      void loadBranding();
+    }, []);
 
   useEffect(() => {
     async function fetchPlans() {
@@ -264,7 +302,7 @@ export default function Apply() {
             </h1>
 
             <p className="mx-auto mt-4 max-w-lg leading-7 text-slate-600">
-              Thank you for choosing BayanNet Telecom Corporation.
+              Thank you for choosing {branding.companyName}.
               Your internet application has been received and will be
               reviewed by our team.
             </p>
@@ -335,11 +373,11 @@ export default function Apply() {
 
             <div>
               <div className="text-xl font-black text-slate-900">
-                Bayan<span className="text-blue-600">Net</span>
+                {branding.tradeName || branding.companyName}
               </div>
 
               <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-                Telecom Corporation
+                {branding.tradeName ? "Subscriber Portal" : "My Account"}
               </div>
             </div>
           </Link>
@@ -362,7 +400,7 @@ export default function Apply() {
           </p>
 
           <h1 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
-            Get Connected with BayanNet
+            Get Connected with {branding.tradeName || branding.companyName}
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-slate-300">
@@ -533,7 +571,7 @@ export default function Apply() {
                 </h2>
 
                 <p className="text-sm text-slate-500">
-                  Where would you like BayanNet to be installed?
+                  Where would you like {branding.tradeName || branding.companyName} to be installed?
                 </p>
               </div>
             </div>
@@ -673,7 +711,7 @@ export default function Apply() {
 
               <span className="text-sm leading-6 text-slate-600">
                 I certify that the information I provided is true and
-                correct. I agree to BayanNet Telecom Corporation's
+                correct. I agree to {branding.tradeName || branding.companyName}'s
                 application requirements, terms and conditions, and
                 privacy policy.
               </span>
