@@ -162,29 +162,20 @@ useEffect(() => {
       <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
 
-          {/* Logo */}
+         
+          {/* Logo and Company Branding */}
           <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center">
+            {branding.logoUrl && (
               <img
-                src="/new-logo.png"
-                alt="BayanNet"
-                className="h-10 w-10 object-contain"
+                src={
+                  branding.logoUrl.startsWith("http")
+                    ? branding.logoUrl
+                    : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
+                }
+                alt={`${branding.tradeName || branding.companyName} logo`}
+                className="h-10 w-10 shrink-0 object-contain"
               />
-            </div>
-
-            
-<div className="flex items-center gap-3">
-  {branding.logoUrl && (
-    <img
-      src={
-        branding.logoUrl.startsWith("http")
-          ? branding.logoUrl
-          : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
-      }
-      alt={`${branding.tradeName || branding.companyName} logo`}
-      className="h-10 w-10 shrink-0 object-contain"
-    />
-  )}
+            )}
 
             <div>
               <div className="text-xl font-extrabold tracking-tight text-slate-900">
@@ -199,9 +190,8 @@ useEffect(() => {
                   </div>
                 )}
             </div>
-          </div>
-
           </Link>
+
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-8 lg:flex">
