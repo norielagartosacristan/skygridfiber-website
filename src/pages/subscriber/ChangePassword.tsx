@@ -85,7 +85,7 @@ const [branding, setBranding] = useState<CompanyBranding>({
       setLoading(true);
 
       const response = await fetch(
-        `${API_URL}/api/subscriber-auth/change-password`,
+        `${API_URL}/api/subscriber-portal-auth/change-password`,
         {
           method: "POST",
           credentials: "include",

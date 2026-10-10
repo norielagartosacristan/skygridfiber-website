@@ -23,7 +23,7 @@ type CompanyBranding = {
 export default function SubscriberLogin() {
   const navigate = useNavigate()
 
-  const [accountNumber, setAccountNumber] =
+  const [email, setAccountNumber] =
     useState('')
 
   const [password, setPassword] =
@@ -78,11 +78,11 @@ useEffect(() => {
 
     setError('')
 
-    const account = accountNumber.trim()
+    const account = email.trim()
 
     if (!account || !password) {
       setError(
-        'Please enter your account number and password.',
+        'Please enter your email address and password.',
       )
       return
     }
@@ -91,7 +91,7 @@ useEffect(() => {
       setLoading(true)
 
       const response = await fetch(
-        `${API_URL}/api/subscriber-auth/login`,
+        `${API_URL}/api/subscriber-portal-auth/login`,
         {
           method: 'POST',
           credentials: 'include',
@@ -99,7 +99,7 @@ useEffect(() => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            accountNumber: account,
+            email: account,
             password,
           }),
         },
@@ -253,10 +253,10 @@ useEffect(() => {
                 {/* Account number */}
                 <div>
                   <label
-                    htmlFor="accountNumber"
+                    htmlFor="email"
                     className="mb-2 block text-sm font-semibold text-slate-700"
                   >
-                    Account Number
+                    Email Address
                   </label>
 
                   <div className="relative">
@@ -266,16 +266,16 @@ useEffect(() => {
                     />
 
                     <input
-                      id="accountNumber"
+                      id="email"
                       type="text"
                       autoComplete="username"
-                      value={accountNumber}
+                      value={email}
                       onChange={(event) =>
                         setAccountNumber(
                           event.target.value,
                         )
                       }
-                      placeholder="e.g. BN-000123"
+                      placeholder="you@example.com"
                       disabled={loading}
                       className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:opacity-60"
                     />

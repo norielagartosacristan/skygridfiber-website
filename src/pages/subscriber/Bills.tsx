@@ -133,7 +133,7 @@ export default function Bills() {
         setError("");
 
         const response = await fetch(
-          `${API_URL}/api/subscriber-auth/bills`,
+          `${API_URL}/api/subscriber-portal-auth/bills`,
           {
             method: "GET",
             credentials: "include",

@@ -84,7 +84,7 @@ const [branding, setBranding] = useState<CompanyBranding>({
         setError("");
 
         const response = await fetch(
-          `${API_URL}/api/subscriber-auth/me`,
+          `${API_URL}/api/subscriber-portal-auth/me`,
           {
             method: "GET",
             credentials: "include",

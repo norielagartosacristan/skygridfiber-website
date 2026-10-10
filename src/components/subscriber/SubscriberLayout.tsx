@@ -20,16 +20,31 @@ type SubscriberLayoutProps = {
 };
 
 type Subscriber = {
+  id: string;
+  accountNumber: string;
   firstName: string;
   middleName?: string | null;
   lastName: string;
+  status?: string;
+};
+
+type PortalAccount = {
+  subscriberId: string;
+  accountNumber: string;
+  firstName: string;
+  middleName?: string | null;
+  lastName: string;
+  status: string;
 };
 
 type MeResponse = {
   success: boolean;
-  subscriber: Subscriber;
+  email: string;
+  mustChangePassword: boolean;
+  accounts: PortalAccount[];
+  selectedSubscriberId: string | null;
+  subscriber: Subscriber | null;
 };
-
 type CompanyBranding = {
   companyName: string;
   tradeName: string | null;
@@ -85,21 +100,31 @@ export default function SubscriberLayout({
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleLogout = () => {
-    // Temporary logout.
-    // Later this will call the real authentication API.
-
-    navigate("/subscriber/login");
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_URL}/api/subscriber-portal-auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Portal logout request failed:", error);
+    } finally {
+      navigate("/subscriber/login", { replace: true });
+    }
   };
 
-  const [subscriber, setSubscriber] =
-  useState<Subscriber | null>(null);
+  const [subscriber, setSubscriber] = useState<Subscriber | null>(null);
+  const [accounts, setAccounts] = useState<PortalAccount[]>([]);
+  const [selectedSubscriberId, setSelectedSubscriberId] = useState<string | null>(null);
+  const [switchingAccount, setSwitchingAccount] = useState(false);
+  const [switchError, setSwitchError] = useState("");
+
 
 useEffect(() => {
   async function loadSubscriber() {
     try {
       const response = await fetch(
-        `${API_URL}/api/subscriber-auth/me`,
+        `${API_URL}/api/subscriber-portal-auth/me`,
         {
           method: "GET",
           credentials: "include",
@@ -114,7 +139,9 @@ useEffect(() => {
         await response.json();
 
       if (data.success) {
-        setSubscriber(data.subscriber);
+        setSubscriber(data.subscriber ?? null);
+        setAccounts(data.accounts ?? []);
+        setSelectedSubscriberId(data.selectedSubscriberId ?? null);
       }
     } catch (error) {
       console.error(
@@ -127,7 +154,43 @@ useEffect(() => {
   loadSubscriber();
 }, []);
 
-const fullName = subscriber
+const handleAccountChange = async (subscriberId: string) => {
+    if (!subscriberId || subscriberId === selectedSubscriberId || switchingAccount) {
+      return;
+    }
+
+    setSwitchingAccount(true);
+    setSwitchError("");
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/subscriber-portal-auth/select-account`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ subscriberId }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Unable to switch subscriber account.");
+      }
+
+      setSelectedSubscriberId(data.selectedSubscriberId ?? subscriberId);
+      window.location.reload();
+    } catch (error) {
+      setSwitchError(
+        error instanceof Error ? error.message : "Unable to switch account.",
+      );
+    } finally {
+      setSwitchingAccount(false);
+    }
+  };
+
+  const fullName = subscriber
   ? [
       subscriber.firstName,
       subscriber.middleName,
@@ -300,7 +363,32 @@ const initials = subscriber
             </p>
           </div>
 
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex items-center gap-3">            {accounts.length > 1 && (
+              <div className="flex min-w-0 flex-col gap-1">
+                <label htmlFor="subscriber-account-selector" className="sr-only">
+                  Select subscriber account
+                </label>
+                <select
+                  id="subscriber-account-selector"
+                  value={selectedSubscriberId ?? ""}
+                  disabled={switchingAccount}
+                  onChange={(event) => void handleAccountChange(event.target.value)}
+                  className="max-w-[190px] rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-blue-500 disabled:opacity-60 sm:max-w-[260px]"
+                >
+                  <option value="" disabled>Select account</option>
+                  {accounts.map((account) => (
+                    <option key={account.subscriberId} value={account.subscriberId}>
+                      {account.accountNumber} — {account.firstName} {account.lastName}
+                    </option>
+                  ))}
+                </select>
+                {switchError && (
+                  <span role="alert" className="max-w-[190px] text-xs text-red-600 sm:max-w-[260px]">
+                    {switchError}
+                  </span>
+                )}
+              </div>
+            )}
 
             <button
               type="button"
