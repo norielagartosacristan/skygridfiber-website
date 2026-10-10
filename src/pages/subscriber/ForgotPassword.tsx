@@ -40,7 +40,7 @@ export default function ForgotPassword() {
       setLoading(true);
 
       const response = await fetch(
-        `${API_URL}/api/subscriber-auth/forgot-password`,
+        `${API_URL}/api/subscriber-portal-auth/forgot-password`,
         {
           method: "POST",
           headers: {

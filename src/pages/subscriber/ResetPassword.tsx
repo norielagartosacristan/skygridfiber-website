@@ -94,16 +94,16 @@ useEffect(() => {
       setLoading(true);
 
       const response = await fetch(
-        `${API_URL}/api/subscriber-auth/reset-password`,
+        `${API_URL}/api/subscriber-portal-auth/reset-password`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({
+         body: JSON.stringify({
             token,
-            password,
+            newPassword: password,
             confirmPassword,
           }),
         },
