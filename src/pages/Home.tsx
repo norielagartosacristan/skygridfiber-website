@@ -247,167 +247,133 @@ useEffect(() => {
 </section>
 
 
-      {/* ==================== PLANS ==================== */}
-      <section
-        id="plans"
-        className="bg-slate-50 px-6 py-10 lg:px-8"
-      >
-        <div className="mx-auto">
 
-          <div className="mx-auto max-w-2xl text-center">
+{/* ==================== PLANS ==================== */}
+<section
+  id="plans"
+  className="w-full bg-white px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+>
+  <div className="mx-auto w-full max-w-[1600px]">
 
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-              Internet Plans
-            </p>
-
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-              Choose the connection that fits you.
-            </h2>
-
-            <p className="mt-5 text-lg leading-8 text-slate-600">
-              Simple and affordable plans designed for everyday connectivity.
-            </p>
-
-          </div>
-
-         
-          
-<div className="mt-14">
-  {plansLoading ? (
-    <p className="py-10 text-center text-slate-500">
-      Loading internet plans...
-    </p>
-  ) : plansError ? (
-    <p className="py-10 text-center text-red-600">
-      {plansError}
-    </p>
-  ) : plans.length === 0 ? (
-    <p className="py-10 text-center text-slate-500">
-      No internet plans are currently available.
-    </p>
-  ) : (
-    <>
-      <div className="mx-auto flex max-w-5xl items-center justify-center gap-3 sm:gap-6">
-        <button
-          type="button"
-          onClick={prevPlan}
-          aria-label="Previous internet plan"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-blue-50 sm:h-12 sm:w-12"
-        >
-          <ChevronLeft size={22} />
-        </button>
-
-       
-          
-<div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-  {plans
-    .slice(currentPlanIndex, currentPlanIndex + 3)
-    .concat(
-      plans.slice(
-        0,
-        Math.max(0, currentPlanIndex + 3 - plans.length),
-      ),
-    )
-    .map((plan) => (
-      <div
-        key={plan.id}
-        className="relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-8"
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-bold uppercase tracking-wider text-slate-500">
-              {plan.planName}
-            </p>
-
-            <div className="mt-4 flex flex-wrap items-end gap-2">
-              <span className="text-3xl font-black text-slate-900">
-                {new Intl.NumberFormat("en-PH", {
-                  style: "currency",
-                  currency: "PHP",
-                  maximumFractionDigits: 2,
-                }).format(Number(plan.monthlyPrice))}
-              </span>
-
-              <span className="mb-1 text-sm text-slate-500">
-                {plan.billingType === "PREPAID"
-                  ? `/ ${plan.validityDays ?? 30} days`
-                  : "/ month"}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-            <Router size={24} />
-          </div>
-        </div>
-
-        <div className="mt-7 rounded-2xl bg-slate-950 p-5">
-          <div className="text-2xl font-black text-white sm:text-3xl">
-            Up to {plan.downloadMbps} Mbps
-          </div>
-
-          <div className="mt-2 text-sm text-slate-400">
-            Download speed
-          </div>
-
-          <div className="mt-3 text-sm text-slate-300">
-            Upload: up to {plan.uploadMbps} Mbps
-          </div>
-        </div>
-
-        <p className="mt-6 text-sm leading-6 text-slate-600">
-          {plan.billingType === "PREPAID"
-            ? "Prepaid internet plan with a defined validity period."
-            : "Monthly internet service for your home or business."}
-        </p>
-
-        <Link
-          to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
-          className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3.5 text-sm font-bold text-white transition hover:bg-blue-700"
-        >
-          Get Started
-          <ArrowRight size={17} />
-        </Link>
-      </div>
-    ))}
-</div>
-    
-        <button
-          type="button"
-          onClick={nextPlan}
-          aria-label="Next internet plan"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:bg-blue-50 sm:h-12 sm:w-12"
-        >
-          <ChevronRight size={22} />
-        </button>
-      </div>
-
-      <div className="mt-6 flex justify-center gap-2">
-        {plans.map((plan, index) => (
-          <button
-            key={plan.id}
-            type="button"
-            onClick={() => setCurrentPlanIndex(index)}
-            aria-label={`Show ${plan.planName}`}
-            aria-current={index === currentPlanIndex ? "true" : undefined}
-            className={`h-2.5 rounded-full transition-all ${
-              index === currentPlanIndex
-                ? "w-8 bg-blue-600"
-                : "w-2.5 bg-slate-300 hover:bg-slate-400"
-            }`}
-          />
-        ))}
-      </div>
-
-      <p className="mt-3 text-center text-sm text-slate-500">
-        Plan {currentPlanIndex + 1} of {plans.length}
+    {/* Section heading */}
+    <div className="mb-12 max-w-2xl sm:mb-14">
+      <p className="text-sm font-medium uppercase tracking-[0.18em] text-blue-600">
+        Internet Plans
       </p>
-    </>
-  )}
-</div>
 
+      <h2 className="mt-4 text-3xl font-normal leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+        The right connection for your everyday life.
+      </h2>
+
+      <p className="mt-5 max-w-xl text-base font-normal leading-7 text-slate-500 sm:text-lg">
+        Reliable fiber internet for streaming, working, learning, and
+        staying connected with the people who matter.
+      </p>
+    </div>
+
+    {/* Plans */}
+    <div>
+      {plansLoading ? (
+        <p className="py-12 text-center text-sm text-slate-500">
+          Loading internet plans...
+        </p>
+      ) : plansError ? (
+        <p className="py-12 text-center text-sm text-red-600">
+          {plansError}
+        </p>
+      ) : plans.length === 0 ? (
+        <p className="py-12 text-center text-sm text-slate-500">
+          No internet plans are currently available.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
+          {plans.map((plan, index) => (
+            <article
+              key={plan.id}
+              className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:border-blue-200 hover:shadow-[0_16px_45px_rgba(15,23,42,0.07)] sm:p-8 lg:p-9"
+            >
+              {/* Plan name */}
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-sm font-medium text-slate-500">
+                    {plan.planName}
+                  </p>
+
+                  <div className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                    <span className="text-3xl font-normal tracking-tight text-slate-900 sm:text-4xl">
+                      {new Intl.NumberFormat("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                        maximumFractionDigits: 2,
+                      }).format(Number(plan.monthlyPrice))}
+                    </span>
+
+                    <span className="text-sm font-normal text-slate-500">
+                      {plan.billingType === "PREPAID"
+                        ? `/ ${plan.validityDays ?? 30} days`
+                        : "/ month"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">
+                  <Router size={21} strokeWidth={1.5} />
+                </div>
+              </div>
+
+              {/* Speed details */}
+              <div className="mt-8 border-y border-slate-100 py-6">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-slate-400">
+                  Download speed
+                </p>
+
+                <p className="mt-2 text-3xl font-normal tracking-tight text-slate-900 sm:text-4xl">
+                  Up to {plan.downloadMbps}
+                  <span className="ml-2 text-base font-normal tracking-normal text-slate-500">
+                    Mbps
+                  </span>
+                </p>
+
+                <div className="mt-5 flex items-center justify-between gap-3 text-sm">
+                  <span className="text-slate-500">Upload speed</span>
+                  <span className="text-slate-700">
+                    Up to {plan.uploadMbps} Mbps
+                  </span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="mt-6 text-sm font-normal leading-6 text-slate-500">
+                {plan.billingType === "PREPAID"
+                  ? "Prepaid fiber internet with a defined validity period."
+                  : "Monthly fiber internet for your home or business."}
+              </p>
+
+              {/* CTA stays at the bottom */}
+              <div className="mt-auto pt-8">
+                <Link
+                  to={`/apply?plan=${encodeURIComponent(String(plan.id))}`}
+                  className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-800 transition hover:border-blue-600 hover:bg-blue-600 hover:text-white"
+                >
+                  Get Started
+                  <ArrowRight size={17} strokeWidth={1.7} />
+                </Link>
+              </div>
+            </article>
+          ))}
         </div>
-      </section>
+      )}
+    </div>
+
+    {/* Footer note */}
+    <p className="mt-8 text-center text-xs font-normal leading-5 text-slate-400">
+      Speeds are advertised as up to the stated Mbps and may vary depending
+      on network conditions and other factors.
+    </p>
+
+  </div>
+</section>
+
 
       {/* ==================== WHY BAYANNET ==================== */}
       <section
