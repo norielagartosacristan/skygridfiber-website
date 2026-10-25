@@ -167,7 +167,7 @@ useEffect(() => {
       
 <div className="flex h-11 w-11 items-center justify-center">
   <img
-    src="/images/logo.jpg"
+    src="/logo.jpg"
     alt="Company Logo"
     className="h-full w-full rounded-xl object-contain"
   />
