@@ -268,7 +268,7 @@ useEffect(() => {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
-          {plans.map((plan) => (
+          {plans.slice(0, 3).map((plan) => (
             <article
               key={plan.id}
               className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:border-blue-200 hover:shadow-[0_16px_45px_rgba(15,23,42,0.07)] sm:p-8 lg:p-9"
