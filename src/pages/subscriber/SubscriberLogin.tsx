@@ -164,9 +164,15 @@ useEffect(() => {
       to="/"
       className="inline-flex w-fit items-center gap-3"
     >
-      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600/90 text-white">
-        <Wifi size={23} />
-      </div>
+      
+<div className="flex h-11 w-11 items-center justify-center">
+  <img
+    src="/images/logo.jpg"
+    alt="Company Logo"
+    className="h-full w-full rounded-xl object-contain"
+  />
+</div>
+
 
       <div>
         <div className="text-xl font-normal tracking-tight text-white">
