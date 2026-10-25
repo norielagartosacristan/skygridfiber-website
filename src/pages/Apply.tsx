@@ -354,6 +354,14 @@ export default function Apply() {
     );
   }
 
+const visiblePlans = plans.filter(
+  (plan) =>
+    !(
+      plan.billingType === "POSTPAID" &&
+      Number(plan.monthlyPrice) === 800
+    ),
+);
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -441,7 +449,7 @@ export default function Apply() {
                     {plansError}
                   </div>
                 ) : (
-                  plans.map((plan) => (
+                  visiblePlans.map((plan) => (
                     <button
                       key={plan.id}
                       type="button"
