@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCompanyPageTitle } from "../hooks/useCompanyPageTitle";
+import Navbar from "../components/Navbar";
 
 type Plan = {
   id: string | number;
@@ -160,189 +161,10 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-white text-slate-900">
 
-      {/* ==================== NAVBAR ==================== */}
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-
-         
-          
-{/* Logo and Company Branding */}
-<Link to="/" className="flex items-center gap-3">
-  <img
-    src={
-      branding.logoUrl
-        ? branding.logoUrl.startsWith("http")
-          ? branding.logoUrl
-          : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
-        : "/logo.jpg"
-    }
-    alt={`${branding.tradeName || branding.companyName} logo`}
-    className="h-10 w-10 shrink-0 object-contain"
-    onError={(event) => {
-      const img = event.currentTarget;
-
-      if (!img.src.endsWith("/logo.jpg")) {
-        img.onerror = null;
-        img.src = "/logo.jpg";
-      }
-    }}
-  />
-
-  <div>
-    <div className="text-xl font-extrabold tracking-tight text-slate-900">
-      {branding.tradeName || branding.companyName}
-    </div>
-
-    {branding.tradeName &&
-      branding.companyName &&
-      branding.tradeName !== branding.companyName && (
-        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-          {branding.companyName}
-        </div>
-      )}
-  </div>
-</Link>
-
-
-          {/* Desktop Navigation */}
-          <nav className="hidden items-center gap-8 lg:flex">
-            <a
-              className="text-sm font-semibold text-blue-600"
-              href="#"
-            >
-              Home
-            </a>
-
-            <a
-              className="text-sm font-semibold text-slate-600 transition hover:text-blue-600"
-              href="#plans"
-            >
-              Plans
-            </a>
-
-            <a
-              className="text-sm font-semibold text-slate-600 transition hover:text-blue-600"
-              href="#coverage"
-            >
-              Coverage
-            </a>
-
-            <a
-              className="text-sm font-semibold text-slate-600 transition hover:text-blue-600"
-              href="#about"
-            >
-              About Us
-            </a>
-
-            <a
-              className="text-sm font-semibold text-slate-600 transition hover:text-blue-600"
-              href="#support"
-            >
-              Support
-            </a>
-          </nav>
-
-          {/* Desktop Apply Button */}
-          <div className="hidden items-center gap-3 lg:flex">
-  <Link
-    to="/subscriber/login"
-    className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-blue-200 hover:text-blue-600"
-  >
-    Subscriber Login
-  </Link>
-
-  <Link
-    to="/apply"
-    className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700"
-  >
-    Apply Now
-    <ArrowRight size={17} />
-  </Link>
-</div>
-
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="rounded-lg p-2 text-slate-700 lg:hidden"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? (
-              <X size={26} />
-            ) : (
-              <Menu size={26} />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {menuOpen && (
-          <div className="border-t border-slate-200 bg-white px-6 py-5 lg:hidden">
-            <div className="mx-auto flex max-w-7xl flex-col gap-4">
-
-              <a
-                href="#"
-                onClick={() => setMenuOpen(false)}
-                className="font-semibold"
-              >
-                Home
-              </a>
-
-              <a
-                href="#plans"
-                onClick={() => setMenuOpen(false)}
-                className="font-semibold"
-              >
-                Plans
-              </a>
-
-              <a
-                href="#coverage"
-                onClick={() => setMenuOpen(false)}
-                className="font-semibold"
-              >
-                Coverage
-              </a>
-
-              <a
-                href="#about"
-                onClick={() => setMenuOpen(false)}
-                className="font-semibold"
-              >
-                About Us
-              </a>
-
-              <a
-                href="#support"
-                onClick={() => setMenuOpen(false)}
-                className="font-semibold"
-              >
-                Support
-              </a>
-
-                {/* Subscriber Login */}
-      <Link
-        to="/subscriber/login"
-        onClick={() => setMenuOpen(false)}
-        className="inline-flex items-center justify-center rounded-xl border border-blue-600 px-5 py-3 font-bold text-blue-600 transition hover:bg-blue-50"
-      >
-        Subscriber Login
-      </Link>
-
-              <Link
-                to="/apply"
-                onClick={() => setMenuOpen(false)}
-                className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 font-bold text-white"
-              >
-                Apply Now
-                <ArrowRight size={17} />
-              </Link>
-
-            </div>
-          </div>
-        )}
-      </header>
-
+     <Navbar
+        branding={branding}
+        apiUrl={API_URL}
+      />
   
 {/* ==================== HERO ==================== */}
 <section className="relative isolate flex h-screen items-center overflow-hidden bg-slate-950">
@@ -431,9 +253,9 @@ useEffect(() => {
       {/* ==================== PLANS ==================== */}
       <section
         id="plans"
-        className="bg-slate-50 px-6 py-24 lg:px-8"
+        className="bg-slate-50 px-6 py-10 lg:px-8"
       >
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto">
 
           <div className="mx-auto max-w-2xl text-center">
 
