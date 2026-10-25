@@ -114,8 +114,8 @@ type CompanyBranding = {
 const API_URL = import.meta.env.VITE_API_URL || "";
 
 const [branding, setBranding] = useState<CompanyBranding>({
-  companyName: "BayanNet Telecom Corporation",
-  tradeName: "BayanNet",
+ companyName: "SkyGrid Tech Solutions Co.",
+ tradeName: "SkyGrid Fiber",
   logoUrl: null,
 });
 useCompanyPageTitle(branding);
@@ -139,8 +139,8 @@ useEffect(() => {
       if (result.success && result.data) {
         setBranding({
           companyName:
-            result.data.companyName || "BayanNet Telecom Corporation",
-          tradeName: result.data.tradeName || null,
+          result.data.companyName || "SkyGrid Tech Solutions Co.",
+          tradeName: result.data.tradeName || "SkyGrid Fiber",
           logoUrl: result.data.logoUrl || null,
         });
       }
@@ -181,9 +181,9 @@ useEffect(() => {
     onError={(event) => {
       const img = event.currentTarget;
 
-      if (!img.src.endsWith("/new-logo.png")) {
+      if (!img.src.endsWith("/logo.jpg")) {
         img.onerror = null;
-        img.src = "/new-logo.png";
+        img.src = "/logo.jpg";
       }
     }}
   />
@@ -343,114 +343,90 @@ useEffect(() => {
         )}
       </header>
 
-      {/* ==================== HERO ==================== */}
-      <section className="relative overflow-hidden bg-slate-950">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_30%,rgba(37,99,235,0.35),transparent_35%)]" />
+  
+{/* ==================== HERO ==================== */}
+<section className="relative isolate flex min-h-[600px] items-center overflow-hidden bg-slate-950 sm:min-h-[650px]">
 
-        <div className="relative mx-auto grid min-h-[650px] max-w-7xl items-center gap-12 px-6 py-20 lg:grid-cols-2 lg:px-8">
+  {/* Background Image */}
+  <div
+    className="absolute inset-0 -z-20 bg-cover bg-center"
+    style={{
+      backgroundImage:
+        "url('/hero-fiber.jpg')",
+    }}
+  />
 
-          {/* Hero Text */}
-          <div>
+  {/* Dark Overlay */}
+  <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/35" />
 
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-400/20 bg-blue-500/10 px-4 py-2 text-sm font-semibold text-blue-300">
-              <span className="h-2 w-2 rounded-full bg-blue-400" />
-              Reliable Internet Connectivity
-            </div>
+  {/* Subtle Blue Overlay */}
+  <div className="absolute inset-0 -z-10 bg-blue-950/10" />
 
-            <h1 className="max-w-3xl text-5xl font-black leading-tight tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Fast Internet.
-              <span className="block text-blue-400">
-                Better Connections.
-              </span>
-            </h1>
+  {/* Hero Content */}
+  <div className="mx-auto w-full max-w-7xl px-6 py-20 lg:px-8 lg:py-28">
+    <div className="max-w-3xl">
 
-            <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-              Stay connected with reliable high-speed internet from 
-              {branding.tradeName || branding.companyName}. Built for homes, families,
-              businesses, and communities.
-            </p>
+      {/* Label */}
+      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-blue-100 backdrop-blur-sm">
+        <span className="h-2 w-2 rounded-full bg-blue-400" />
+        Reliable Fiber Internet
+      </div>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+      {/* Heading */}
+      <h1 className="text-2xl leading-tight tracking-tight text-white sm:text-4xl md:text-4xl">
+       Power Your Home and Business with SkyGrid Fiber Internet
+      </h1>
 
-              <a
-                href="#plans"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-6 py-4 font-bold text-white shadow-xl shadow-blue-600/20 transition hover:bg-blue-500"
-              >
-                View Internet Plans
-                <ArrowRight size={18} />
-              </a>
+      {/* Description */}
+      <p className="mt-6 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
+        Enjoy reliable, high-speed internet for your home,
+        family, and business with{" "}
+        {branding.tradeName || branding.companyName}.
+        Stay connected to the things that matter most.
+      </p>
 
-              <a
-                href="#coverage"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-6 py-4 font-bold text-white transition hover:bg-white/10"
-              >
-                Check Coverage
-                <ChevronRight size={18} />
-              </a>
+      {/* Buttons */}
+      <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a
+          href="#plans"
+          className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl bg-blue-600 px-7 py-4 font-bold text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500"
+        >
+          Explore Internet Plans
+          <ArrowRight size={19} />
+        </a>
 
-            </div>
+        <a
+          href="#coverage"
+          className="inline-flex min-h-14 items-center justify-center gap-2 rounded-xl border border-white/30 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur-sm transition hover:bg-white/20"
+        >
+          Check Coverage
+          <ChevronRight size={19} />
+        </a>
+      </div>
 
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm text-slate-300">
-
-              <div className="flex items-center gap-2">
-                <Check className="text-blue-400" size={18} />
-                Affordable Plans
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Check className="text-blue-400" size={18} />
-                Reliable Connectivity
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Check className="text-blue-400" size={18} />
-                Local Support
-              </div>
-
-            </div>
-          </div>
-
-          {/* Hero Visual */}
-          <div className="hidden lg:flex lg:justify-end">
-            <div className="relative h-[440px] w-[440px]">
-
-              <div className="absolute inset-10 rounded-full border border-blue-500/20" />
-              <div className="absolute inset-20 rounded-full border border-blue-500/20" />
-              <div className="absolute inset-32 rounded-full border border-blue-500/20" />
-
-              <div className="absolute left-1/2 top-1/2 flex h-44 w-44 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[2.5rem] bg-blue-600 shadow-2xl shadow-blue-600/40">
-                <Wifi
-                  size={90}
-                  className="text-white"
-                  strokeWidth={1.5}
-                />
-              </div>
-
-              <div className="absolute right-2 top-16 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
-                <div className="text-2xl font-black text-white">
-                  100 Mbps
-                </div>
-
-                <div className="text-xs text-slate-300">
-                  Up to speed
-                </div>
-              </div>
-
-              <div className="absolute bottom-16 left-2 rounded-2xl border border-white/10 bg-white/10 px-5 py-4 backdrop-blur">
-                <div className="text-2xl font-black text-white">
-                  24/7
-                </div>
-
-                <div className="text-xs text-slate-300">
-                  Connected
-                </div>
-              </div>
-
-            </div>
-          </div>
-
+      {/* Benefits */}
+      <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-white/90">
+        <div className="flex items-center gap-2">
+          <Check size={17} className="text-blue-400" />
+          Plans for Every Budget
         </div>
-      </section>
+
+        <div className="flex items-center gap-2">
+          <Check size={17} className="text-blue-400" />
+          Reliable Connectivity
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Check size={17} className="text-blue-400" />
+          Customer Support
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
 
       {/* ==================== PLANS ==================== */}
       <section
@@ -576,9 +552,7 @@ useEffect(() => {
       </div>
     ))}
 </div>
-
     
-
         <button
           type="button"
           onClick={nextPlan}
@@ -828,7 +802,7 @@ useEffect(() => {
 
                 <div className="flex h-11 w-11 items-center justify-center">
                   <img
-                    src="/new-logo.png"
+                    src="/logo.jpg"
                     alt={branding.companyName}
                     className="h-10 w-10 object-contain"
                   />
