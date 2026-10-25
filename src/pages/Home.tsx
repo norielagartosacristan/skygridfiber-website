@@ -364,96 +364,89 @@ const visiblePlans = plans.filter(
 </section>
 
 
-      {/* ==================== WHY BAYANNET ==================== */}
-      <section
-        id="about"
-        className="px-6 py-24 lg:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
+{/* ==================== WHY SKYGRID FIBER ==================== */}
+<section
+  id="about"
+  className="bg-slate-50/70 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+>
+  <div className="mx-auto max-w-7xl">
+    <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
 
-          <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
+      {/* Left: Introduction */}
+      <div>
+        <p className="text-sm font-medium uppercase tracking-[0.16em] text-blue-600">
+          Why {branding.tradeName || branding.companyName}
+        </p>
 
-            <div>
+        <h2 className="mt-4 max-w-xl text-3xl font-normal leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+          Internet made for the way you live.
+        </h2>
 
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-600">
-                Why {branding.companyName}
+        <p className="mt-6 max-w-xl text-base font-normal leading-7 text-slate-600 sm:text-lg sm:leading-8">
+          {branding.companyName} is committed to bringing reliable,
+          accessible, and affordable internet connectivity to the
+          communities we serve.
+        </p>
+
+        <Link
+          to="/apply"
+          className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+        >
+          Become a {branding.tradeName || branding.companyName} subscriber
+          <ArrowRight size={17} strokeWidth={1.6} />
+        </Link>
+      </div>
+
+      {/* Right: Benefits */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        {[
+          {
+            icon: Wifi,
+            title: "Reliable connectivity",
+            text: "Stay connected for work, school, entertainment, and everyday communication.",
+          },
+          {
+            icon: Router,
+            title: "Modern fiber technology",
+            text: "A fiber-based connection designed for fast and dependable everyday internet.",
+          },
+          {
+            icon: Headphones,
+            title: "Customer support",
+            text: "Get assistance when you need help with your internet service.",
+          },
+          {
+            icon: ShieldCheck,
+            title: "Service you can trust",
+            text: "Internet service focused on our customers and the communities we serve.",
+          },
+        ].map((item) => {
+          const Icon = item.icon;
+
+          return (
+            <div
+              key={item.title}
+              className="rounded-2xl border border-slate-200/80 bg-white p-6 transition-colors duration-300 hover:border-blue-200 sm:p-7"
+            >
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                <Icon size={21} strokeWidth={1.6} />
+              </div>
+
+              <h3 className="mt-5 text-base font-medium tracking-tight text-slate-800">
+                {item.title}
+              </h3>
+
+              <p className="mt-2 text-sm font-normal leading-6 text-slate-500">
+                {item.text}
               </p>
-
-              <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
-                Internet made for the way you live.
-              </h2>
-
-              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                {branding.companyName} is committed to bringing
-                reliable, accessible, and affordable internet connectivity
-                to the communities we serve.
-              </p>
-
-              <Link
-                to="/apply"
-                className="mt-8 inline-flex items-center gap-2 font-bold text-blue-600 hover:text-blue-700"
-              >
-                Become a {branding.tradeName || branding.companyName} subscriber
-                <ArrowRight size={18} />
-              </Link>
-
             </div>
+          );
+        })}
+      </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-
-              {[
-                {
-                  icon: Wifi,
-                  title: "Reliable Connectivity",
-                  text: "Stay connected for work, school, entertainment, and everyday communication.",
-                },
-                {
-                  icon: Router,
-                  title: "Fiber Technology",
-                  text: "Modern network infrastructure designed for fast and stable connectivity.",
-                },
-                {
-                  icon: Headphones,
-                  title: "Customer Support",
-                  text: "Get assistance when you need help with your internet service.",
-                },
-                {
-                  icon: ShieldCheck,
-                  title: "Trusted Service",
-                  text: "Professional internet service built around our customers and communities.",
-                },
-              ].map((item) => {
-
-                const Icon = item.icon;
-
-                return (
-                  <div
-                    key={item.title}
-                    className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
-                  >
-
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-                      <Icon size={23} />
-                    </div>
-
-                    <h3 className="mt-5 font-bold text-slate-900">
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      {item.text}
-                    </p>
-
-                  </div>
-                );
-
-              })}
-
-            </div>
-
-          </div>
-        </div>
-      </section>
+    </div>
+  </div>
+</section>
 
       {/* ==================== COVERAGE ==================== */}
       <section
