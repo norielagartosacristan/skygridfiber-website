@@ -182,7 +182,7 @@ const visiblePlans = plans.filter(
 
       {/* Heading */}
       <h1 className="text-2xl leading-tight tracking-tight text-white sm:text-4xl md:text-4xl">
-       Power Your Home and Business with SkyGrid Fiber Internet
+       Power Your Home and Business with SkyGrid Fiber
       </h1>
 
       {/* Description */}
@@ -245,7 +245,7 @@ const visiblePlans = plans.filter(
   <div className="mx-auto w-full max-w-[1600px]">
 
     {/* Section heading */}
-    <div className="mb-12 max-w-2xl sm:mb-14">
+    <div className="mb-5 max-w-2xl sm:mb-14">
       <p className="text-sm font-medium uppercase tracking-[0.18em] text-blue-600">
         Internet Plans
       </p>
@@ -367,7 +367,7 @@ const visiblePlans = plans.filter(
 {/* ==================== WHY SKYGRID FIBER ==================== */}
 <section
   id="about"
-  className="bg-slate-50/70 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+  className="bg-slate-50/70 px-5 py-5 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
 >
   <div className="mx-auto max-w-7xl">
     <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
@@ -452,7 +452,7 @@ const visiblePlans = plans.filter(
 {/* ==================== COVERAGE ==================== */}
 <section
   id="coverage"
-  className="bg-slate-950 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+  className="bg-slate-950 px-5 py-8 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
 >
   <div className="mx-auto max-w-7xl">
     <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
