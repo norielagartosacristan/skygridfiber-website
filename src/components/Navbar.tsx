@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, ChevronRight, Menu, X } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 
 type CompanyBranding = {
   companyName: string;

@@ -5,11 +5,9 @@ import {
   Check,
   Clock3,
   Headphones,
-  Menu,
   Router,
   ShieldCheck,
   Wifi,
-  X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -29,7 +27,6 @@ type Plan = {
 };
 
 function Home() {
-const [menuOpen, setMenuOpen] = useState(false);
 const [plans, setPlans] = useState<Plan[]>([]);
 const [plansLoading, setPlansLoading] = useState(true);
 const [plansError, setPlansError] = useState("");
