@@ -148,56 +148,64 @@ useEffect(() => {
   return (
     <div className="min-h-screen bg-slate-50">
       <div className="grid min-h-screen lg:grid-cols-2">
-        {/* Left side */}
-        <div className="relative hidden overflow-hidden bg-slate-950 lg:flex">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.35),transparent_45%)]" />
+       
+{/* Left side - Background Image */}
+<div
+  className="relative hidden overflow-hidden bg-slate-950 bg-cover bg-center bg-no-repeat lg:flex"
+  style={{
+    backgroundImage: "url('/login-left.jpg')",
+  }}
+>
+  {/* Dark overlay para readable ang text */}
+  <div className="absolute inset-0 bg-slate-950/55" />
 
-          <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-16">
-            <Link
-              to="/"
-              className="inline-flex w-fit items-center gap-3"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/20">
-                <Wifi size={23} />
-              </div>
+  <div className="relative z-10 flex w-full flex-col justify-between p-10 xl:p-16">
+    <Link
+      to="/"
+      className="inline-flex w-fit items-center gap-3"
+    >
+      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600/90 text-white">
+        <Wifi size={23} />
+      </div>
 
-              <div>
-                <div className="text-xl font-black tracking-tight text-white">
-                  {branding.tradeName || branding.companyName}
-                </div>
-
-                <div className="text-xs font-medium text-slate-400">
-                  {branding.tradeName ? "Subscriber Portal" : "My Internet Service Provider"}
-                </div>
-              </div>
-            </Link>
-
-            <div className="max-w-xl">
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-blue-300">
-                <LockKeyhole size={16} />
-                Secure Subscriber Portal
-              </div>
-
-              <h1 className="text-4xl font-black tracking-tight text-white xl:text-6xl">
-                Manage your
-                <span className="block text-blue-500">
-                  {branding.tradeName || branding.companyName} account.
-                </span>
-              </h1>
-
-              <p className="mt-6 max-w-lg text-lg leading-8 text-slate-400">
-                View your internet plan, billing
-                information, payment history, and
-                service status from one secure portal.
-              </p>
-            </div>
-
-            <div className="text-sm text-slate-500">
-              © {new Date().getFullYear()} {branding.tradeName || branding.companyName}
-              {branding.tradeName}. All rights reserved.
-            </div>
-          </div>
+      <div>
+        <div className="text-xl font-normal tracking-tight text-white">
+          {branding.tradeName || branding.companyName}
         </div>
+
+        <div className="text-xs font-normal text-slate-300">
+          {branding.tradeName
+            ? "Subscriber Portal"
+            : "My Internet Service Provider"}
+        </div>
+      </div>
+    </Link>
+
+    <div className="max-w-xl">
+      <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-normal text-blue-200">
+        <LockKeyhole size={16} />
+        Secure Subscriber Portal
+      </div>
+
+      <h1 className="text-4xl font-normal leading-tight tracking-tight text-white xl:text-5xl">
+        Manage your
+        <span className="block text-blue-300">
+          {branding.tradeName || branding.companyName} account.
+        </span>
+      </h1>
+
+      <p className="mt-6 max-w-lg text-base font-normal leading-7 text-slate-200">
+        View your internet plan, billing information, payment
+        history, and service status from one secure portal.
+      </p>
+    </div>
+
+    <div className="text-sm font-normal text-slate-300">
+      © {new Date().getFullYear()}{" "}
+      {branding.tradeName || branding.companyName}. All rights reserved.
+    </div>
+  </div>
+</div>
 
         {/* Login */}
         <div className="flex items-center justify-center px-5 py-10 sm:px-8">
