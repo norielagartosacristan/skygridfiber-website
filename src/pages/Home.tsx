@@ -1,5 +1,4 @@
 import {
-  ChevronLeft,
   ChevronRight,
   ArrowRight,
   Check,
@@ -30,19 +29,6 @@ function Home() {
 const [plans, setPlans] = useState<Plan[]>([]);
 const [plansLoading, setPlansLoading] = useState(true);
 const [plansError, setPlansError] = useState("");
-const [currentPlanIndex, setCurrentPlanIndex] = useState(0);
-
-const nextPlan = () => {
-  setCurrentPlanIndex((index) =>
-    plans.length ? (index + 1) % plans.length : 0
-  );
-};
-
-const prevPlan = () => {
-  setCurrentPlanIndex((index) =>
-    plans.length ? (index - 1 + plans.length) % plans.length : 0
-  );
-};
 
 useEffect(() => {
   const controller = new AbortController();
@@ -96,11 +82,6 @@ useEffect(() => {
 
   return () => controller.abort();
 }, []);
-
-useEffect(() => {
-  setCurrentPlanIndex(0);
-}, [plans.length]);
-
 
 
 type CompanyBranding = {
@@ -287,7 +268,7 @@ useEffect(() => {
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 xl:gap-6">
-          {plans.map((plan, index) => (
+          {plans.map((plan) => (
             <article
               key={plan.id}
               className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:border-blue-200 hover:shadow-[0_16px_45px_rgba(15,23,42,0.07)] sm:p-8 lg:p-9"
