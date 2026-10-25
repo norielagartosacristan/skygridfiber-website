@@ -448,81 +448,80 @@ const visiblePlans = plans.filter(
   </div>
 </section>
 
-      {/* ==================== COVERAGE ==================== */}
-      <section
-        id="coverage"
-        className="bg-slate-950 px-6 py-24 lg:px-8"
-      >
-        <div className="mx-auto max-w-7xl">
 
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
+{/* ==================== COVERAGE ==================== */}
+<section
+  id="coverage"
+  className="bg-slate-950 px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
+>
+  <div className="mx-auto max-w-7xl">
+    <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-20">
 
-            <div>
+      {/* Left: Coverage introduction */}
+      <div>
+        <p className="text-sm font-medium uppercase tracking-[0.16em] text-blue-400">
+          Coverage
+        </p>
 
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-blue-400">
-                Coverage
-              </p>
+        <h2 className="mt-4 max-w-xl text-3xl font-normal leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+          Connecting more communities.
+        </h2>
 
-              <h2 className="mt-3 text-4xl font-black tracking-tight text-white sm:text-5xl">
-                Connecting more communities.
-              </h2>
+        <p className="mt-6 max-w-xl text-base font-normal leading-7 text-slate-300 sm:text-lg sm:leading-8">
+          Our network continues to grow as we bring reliable internet
+          connectivity to more homes and businesses.
+        </p>
 
-              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
-                Our network continues to grow as we bring reliable
-                internet connectivity to more homes and businesses.
-              </p>
-
-              <div className="mt-8 flex items-center gap-3 text-slate-200">
-
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
-                  <Wifi size={19} />
-                </div>
-
-                Check if {branding.tradeName || branding.companyName} is available in your area.
-
-              </div>
-
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur">
-
-              <div className="flex items-center gap-4">
-
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-600">
-                  <Clock3
-                    size={27}
-                    className="text-white"
-                  />
-                </div>
-
-                <div>
-
-                  <h3 className="font-bold text-white">
-                    Coming to your area?
-                  </h3>
-
-                  <p className="text-sm text-slate-400">
-                    Contact us to check availability.
-                  </p>
-
-                </div>
-
-              </div>
-
-              <Link
-                to="/apply"
-                className="mt-7 flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 font-bold text-slate-900 transition hover:bg-slate-100"
-              >
-                Check Availability
-                <ArrowRight size={17} />
-              </Link>
-
-            </div>
-
+        <div className="mt-8 flex items-center gap-3 text-sm font-normal leading-6 text-slate-300">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-blue-400/20 bg-blue-500/10 text-blue-400">
+            <Wifi size={19} strokeWidth={1.6} />
           </div>
 
+          <span>
+            Check if {branding.tradeName || branding.companyName} is
+            available in your area.
+          </span>
         </div>
-      </section>
+      </div>
+
+      {/* Right: Availability card */}
+      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 lg:p-10">
+        <div className="flex items-start gap-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-400">
+            <Clock3 size={23} strokeWidth={1.6} />
+          </div>
+
+          <div className="pt-0.5">
+            <h3 className="text-lg font-medium tracking-tight text-white">
+              Is your area covered?
+            </h3>
+
+            <p className="mt-2 text-sm font-normal leading-6 text-slate-400">
+              Get in touch with our team to check service availability
+              for your home or business.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-7 border-t border-white/10 pt-6">
+          <Link
+            to="/apply"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-blue-500"
+          >
+            Check Availability
+            <ArrowRight size={17} strokeWidth={1.7} />
+          </Link>
+
+          <p className="mt-4 text-center text-xs font-normal leading-5 text-slate-500">
+            Availability depends on network coverage in your location.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
       {/* ==================== CTA ==================== */}
       <section
