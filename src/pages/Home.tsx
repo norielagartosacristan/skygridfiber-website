@@ -345,7 +345,7 @@ useEffect(() => {
 
   
 {/* ==================== HERO ==================== */}
-<section className="relative isolate flex min-h-[600px] items-center overflow-hidden bg-slate-950 sm:min-h-[650px]">
+<section className="relative isolate flex h-screen items-center overflow-hidden bg-slate-950">
 
   {/* Background Image */}
   <div
