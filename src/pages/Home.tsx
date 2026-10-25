@@ -174,7 +174,7 @@ useEffect(() => {
         ? branding.logoUrl.startsWith("http")
           ? branding.logoUrl
           : `${API_URL.replace(/\/$/, "")}${branding.logoUrl.startsWith("/") ? "" : "/"}${branding.logoUrl}`
-        : "/new-logo.png"
+        : "/logo.jpg"
     }
     alt={`${branding.tradeName || branding.companyName} logo`}
     className="h-10 w-10 shrink-0 object-contain"

@@ -365,8 +365,8 @@ export default function Apply() {
           >
            <div className="flex h-11 w-11 items-center justify-center">
               <img
-                src="/new-logo.png"
-                alt="BayanNet"
+                src="/logo.jpg"
+                alt="SkyGrid Fiber"
                 className="h-10 w-10 object-contain"
               />
             </div>
